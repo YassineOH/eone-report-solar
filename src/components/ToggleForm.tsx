@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { loginToFusionSolar } from '@/lib/huawei-api';
 import { AxiosError } from 'axios';
 import { Card, CardContent, CardHeader } from './ui/card';
+import { useRouter } from 'next/navigation';
 
 const credentialsSchema = z.object({
   username: z.string({ required_error: 'the username is required' }).min(3),
@@ -57,6 +58,7 @@ export default ToggleForm;
 
 const CredentialsForm = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -77,8 +79,8 @@ const CredentialsForm = () => {
         setErrorMsg('Either username, password or both are incorrect.');
       }
     },
-    onSuccess: (data) => {
-      const token = data.headers['xsrf-token'];
+    onSuccess: () => {
+      router.push('/plants');
     },
   });
 

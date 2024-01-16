@@ -21,12 +21,14 @@ export async function POST(request: Request) {
     }
 
     const token = headers['xsrf-token'];
-    return new Response('login successfully', {
+    return new Response('login success', {
       headers: {
         'xsrf-token': token,
       },
     });
   } catch (error) {
+    console.log(error);
+
     throw new Response('Something went wrong, please try later', {
       status: 500,
     });
