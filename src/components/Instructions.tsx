@@ -30,7 +30,7 @@ function Instructions() {
           Click Add and fill-in the following informations:
           <ul className="flex list-disc flex-col items-start justify-start gap-y-1 pl-4">
             <li>System name</li>
-            <li>Date</li>
+            <li>Deadline</li>
             <li>User Name</li>
             <li>Password</li>
             <li>Associated</li>

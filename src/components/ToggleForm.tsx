@@ -3,11 +3,24 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import autoAnimate from '@formkit/auto-animate';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Instructions from './Instructions';
 import { Button } from './ui/button';
 import { Input, InputProps } from './ui/input';
 import { Label } from './ui/label';
+import { useMutation } from '@tanstack/react-query';
+import { loginToFusionSolar } from '@/lib/huawei-api';
+import { AxiosError } from 'axios';
+import { Card, CardContent, CardHeader } from './ui/card';
+
+const credentialsSchema = z.object({
+  username: z.string({ required_error: 'the username is required' }).min(3),
+  password: z.string({ required_error: 'the password is required' }).min(3),
+});
+
+type CredentialsType = z.infer<typeof credentialsSchema>;
 
 function ToggleForm() {
   const [current, setCurrent] = useState<'instructions' | 'form'>(
@@ -21,7 +34,7 @@ function ToggleForm() {
     >
       <p className="text-center text-lg sm:text-xl lg:text-3xl">
         {current === 'form'
-          ? 'Enter you credentials'
+          ? 'Enter your credentials'
           : 'How I get my credentials?'}
       </p>
       {current === 'instructions' ? <Instructions /> : <CredentialsForm />}
@@ -43,25 +56,68 @@ function ToggleForm() {
 export default ToggleForm;
 
 const CredentialsForm = () => {
-  const { register } = useForm({
-    defaultValues: {
-      username: '',
-      password: '',
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<CredentialsType>({
+    resolver: zodResolver(credentialsSchema),
+    mode: 'onBlur',
+  });
+
+  const { mutate: login, isPending } = useMutation({
+    mutationFn: loginToFusionSolar,
+    onError: (error) => {
+      const err = error as AxiosError;
+      if (err.response?.data === 'time expired') {
+        setErrorMsg('Change the the deadline of the northbound account.');
+      }
+      if (err.response?.data === 'invalid credentials') {
+        setErrorMsg('Either username, password or both are incorrect.');
+      }
+    },
+    onSuccess: (data) => {
+      const token = data.headers['xsrf-token'];
     },
   });
+
+  const [parent] = useAutoAnimate();
+
+  const handleLogin = async ({ password, username }: CredentialsType) => {
+    login({ username, password });
+  };
   return (
-    <form className="flex w-full flex-col items-stretch gap-y-4">
+    <form
+      className="flex w-full flex-col items-stretch gap-y-4"
+      onSubmit={handleSubmit(handleLogin)}
+      ref={parent}
+    >
+      {!!errorMsg && (
+        <Card className="w-full bg-red-50 text-center  text-red-900 shadow-red-50">
+          <CardHeader className="text-lg font-semibold capitalize">
+            An error occurred.
+          </CardHeader>
+          <CardContent>{errorMsg}</CardContent>
+        </Card>
+      )}
       <InputWithLabel
         {...register('username')}
         type="text"
         labelText="username"
+        disabled={isPending}
+        error={errors.username?.message}
       />
       <InputWithLabel
         {...register('password')}
         type="password"
         labelText="password"
+        disabled={isPending}
+        error={errors.password?.message}
       />
-      <Button type="submit">Submit</Button>
+      <Button type="submit" disabled={isPending || !isValid}>
+        Submit
+      </Button>
     </form>
   );
 };
