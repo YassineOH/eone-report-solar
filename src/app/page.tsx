@@ -12,17 +12,25 @@ export default function Home() {
       <div className="flex w-full max-w-7xl flex-col items-center justify-between gap-y-12 lg:gap-y-20  xl:flex-row">
         <header className="flex flex-1 flex-col justify-center gap-y-10 px-6 lg:px-16 xl:gap-y-12 xl:px-8 ">
           <h1 className="w-full text-center text-3xl font-bold lg:text-6xl">
-            Generate & Download the report of your solar plants
+            Download the report of your solar plants
           </h1>
           <div className="flex w-full flex-col items-center gap-y-4">
-            <p className="text-3xl font-light uppercase text-gray-400 ">
+            <p className="text-lg font-light uppercase text-gray-400 sm:text-xl lg:text-3xl">
               powered by
             </p>
-            <Image alt="e-one logo" src="logo.svg" width={280} height={61.34} />
+            <Image
+              alt="e-one logo"
+              src="logo.svg"
+              width={280}
+              height={61.34}
+              className="w-40 lg:w-60 xl:w-[280px]"
+            />
           </div>
         </header>
         <div className="flex w-full flex-1 flex-col items-center justify-center gap-y-8">
-          <p className="text-3xl">How I get my credentials?</p>
+          <p className="text-center text-lg sm:text-xl lg:text-3xl">
+            How I get my credentials?
+          </p>
           <ol className="hidden w-auto list-decimal flex-col items-start justify-start gap-y-4 px-4 lg:flex">
             <li>
               Head to{' '}
