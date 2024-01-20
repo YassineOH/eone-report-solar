@@ -13,3 +13,9 @@ export interface ReLOGIN {
   immediately: boolean;
   message: 'USER_MUST_RELOGIN';
 }
+
+export interface ToManyRequest {
+  failCode: 407;
+  data: 'ACCESS_FREQUENCY_IS_TOO_HIGH';
+  success: false;
+}

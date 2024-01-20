@@ -2,7 +2,6 @@ import { buttonVariants } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -11,7 +10,8 @@ import { getPlants } from '@/lib/huawei-api';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { MapPin, Zap } from 'lucide-react';
+import { MapPin, PlugZap, Zap } from 'lucide-react';
+import { format } from 'date-fns';
 
 async function Plants() {
   const token = cookies().get('xsrf-token')?.value;
@@ -24,8 +24,17 @@ async function Plants() {
     token,
   });
 
-  if (data.data.message === 'USER_MUST_RELOGIN') {
+  if (data.data.failCode === 305) {
     redirect('/');
+  }
+
+  if (data.data.failCode === 407) {
+    return (
+      <div className="flex flex-col items-center gap-y-4">
+        <h2 className="text-center text-lg font-semibold">To many requests</h2>
+        <p className="text-gray-500">Please wait one minute and try later...</p>
+      </div>
+    );
   }
 
   return (
@@ -40,15 +49,24 @@ async function Plants() {
             <CardContent>
               <div className="flex flex-col items-start gap-y-2">
                 <div className="flex items-center gap-x-1 text-sm text-gray-500">
-                  <Zap className="h-5 w-4" /> Capacity: {p.capacity}kWp.
+                  <Zap className="h-5 w-4" />
+                  Capacity: {p.capacity}kWp.
                 </div>
                 <div className="flex items-center gap-x-1 text-sm text-gray-500">
-                  <MapPin className="h-5 w-4" /> Address: {p.plantAddress}.
+                  <MapPin className="h-5 w-4" />
+                  Address: {p.plantAddress}.
+                </div>
+                <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                  <PlugZap className="h-5 w-4" />
+                  Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Link href="/" className={buttonVariants({ variant: 'link' })}>
+              <Link
+                href={`/plants/${p.plantCode}`}
+                className={buttonVariants({ variant: 'secondary' })}
+              >
                 See the details
               </Link>
             </CardFooter>

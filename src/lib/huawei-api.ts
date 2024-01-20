@@ -1,4 +1,4 @@
-import { ReLOGIN } from '@/types/login';
+import { ReLOGIN, ToManyRequest } from '@/types/login';
 import { Plants } from '@/types/plants';
 import axios from 'axios';
 
@@ -16,7 +16,7 @@ export const loginToFusionSolar = async ({
 };
 
 export const getPlants = ({ token }: { token: string }) => {
-  return axios.post<Plants | ReLOGIN>(
+  return axios.post<Plants | ReLOGIN | ToManyRequest>(
     'https://eu5.fusionsolar.huawei.com/thirdData/stations',
     {
       pageNo: 1,
