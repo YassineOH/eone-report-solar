@@ -7,3 +7,9 @@ export interface LoginResponse {
 }
 
 export interface Params {}
+
+export interface ReLOGIN {
+  failCode: 305;
+  immediately: boolean;
+  message: 'USER_MUST_RELOGIN';
+}
