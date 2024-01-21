@@ -10,7 +10,7 @@ import { getPlants } from '@/lib/huawei-api';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { MapPin, PlugZap, Zap } from 'lucide-react';
+import { Key, MapPin, PlugZap, Zap } from 'lucide-react';
 import { format } from 'date-fns';
 
 async function Plants() {
@@ -59,6 +59,10 @@ async function Plants() {
                 <div className="flex items-center gap-x-1 text-sm text-gray-500">
                   <PlugZap className="h-5 w-4" />
                   Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
+                </div>
+                <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                  <Key className="h-5 w-4" />
+                  Plant id: {p.plantCode}
                 </div>
               </div>
             </CardContent>

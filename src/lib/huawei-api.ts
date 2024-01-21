@@ -1,3 +1,4 @@
+import { DailyData } from '@/types/dailyData';
 import { ReLOGIN, ToManyRequest } from '@/types/login';
 import { Plants } from '@/types/plants';
 import axios from 'axios';
@@ -20,6 +21,30 @@ export const getPlants = ({ token }: { token: string }) => {
     'https://eu5.fusionsolar.huawei.com/thirdData/stations',
     {
       pageNo: 1,
+    },
+    {
+      headers: {
+        'xsrf-token': token,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+};
+
+export const getDailyData = ({
+  token,
+  stationCodes,
+  collectTime,
+}: {
+  token: string;
+  stationCodes: string;
+  collectTime: number;
+}) => {
+  return axios.post<DailyData | ReLOGIN | ToManyRequest>(
+    'https://eu5.fusionsolar.huawei.com/thirdData/getKpiStationDay',
+    {
+      stationCodes,
+      collectTime,
     },
     {
       headers: {
