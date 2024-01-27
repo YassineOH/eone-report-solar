@@ -1,12 +1,12 @@
 export interface DailyData {
-  data: Daum[];
+  data: FusionSolarDailyData[];
   failCode: 0;
   message: any;
   params: Params;
   success: boolean;
 }
 
-export interface Daum {
+export interface FusionSolarDailyData {
   collectTime: number;
   stationCode: string;
   dataItemMap: DataItemMap;
