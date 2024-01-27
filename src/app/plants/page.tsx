@@ -41,41 +41,52 @@ async function Plants() {
     <div className="w-full max-w-[1440px] space-y-12 ">
       <h2 className="text-semibold text-center text-5xl">Choose your plant</h2>
       <div className="grid grid-cols-1 gap-4 px-12 md:grid-cols-2 xl:grid-cols-3">
-        {data.data.data.list.map((p) => (
-          <Card key={p.plantCode} className="min-w-36 ">
-            <CardHeader>
-              <CardTitle>{p.plantName}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-start gap-y-2">
-                <div className="flex items-center gap-x-1 text-sm text-gray-500">
-                  <Zap className="h-5 w-4" />
-                  Capacity: {p.capacity}kWp.
+        {data.data.data.list.map((p) => {
+          const encodedData = encodeURIComponent(
+            JSON.stringify({
+              plantName: p.plantName,
+              capacity: p.capacity,
+              gridConnectionDate: p.gridConnectionDate,
+              plantAddress: p.plantAddress,
+            }),
+          );
+
+          return (
+            <Card key={p.plantCode} className="min-w-36 ">
+              <CardHeader>
+                <CardTitle>{p.plantName}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-start gap-y-2">
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                    <Zap className="h-5 w-4" />
+                    Capacity: {p.capacity}kWp.
+                  </div>
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                    <MapPin className="h-5 w-4" />
+                    Address: {p.plantAddress}.
+                  </div>
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                    <PlugZap className="h-5 w-4" />
+                    Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
+                  </div>
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                    <Key className="h-5 w-4" />
+                    Plant id: {p.plantCode}
+                  </div>
                 </div>
-                <div className="flex items-center gap-x-1 text-sm text-gray-500">
-                  <MapPin className="h-5 w-4" />
-                  Address: {p.plantAddress}.
-                </div>
-                <div className="flex items-center gap-x-1 text-sm text-gray-500">
-                  <PlugZap className="h-5 w-4" />
-                  Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
-                </div>
-                <div className="flex items-center gap-x-1 text-sm text-gray-500">
-                  <Key className="h-5 w-4" />
-                  Plant id: {p.plantCode}
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Link
-                href={`/plants/${p.plantCode}`}
-                className={buttonVariants({ variant: 'secondary' })}
-              >
-                See the details
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
+              </CardContent>
+              <CardFooter>
+                <Link
+                  href={`/plants/${p.plantCode}?plantInfo=${encodedData}`}
+                  className={buttonVariants({ variant: 'secondary' })}
+                >
+                  See the details
+                </Link>
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
