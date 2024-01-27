@@ -1,15 +1,16 @@
 import { getDailyData } from '@/lib/huawei-api';
 import { FusionSolarDailyData } from '@/types/dailyData';
 import { cookies } from 'next/headers';
-import { redirect, useSearchParams } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { format } from 'date-fns';
 import { Zap, MapPin, PlugZap, Key } from 'lucide-react';
 import ChooseMonth from '@/components/ChooseMonth';
 
 import { number, string, z } from 'zod';
+import Summary from '@/components/Summary';
 
-const Charts = dynamic(() => import('@/components/Charts'), { ssr: false });
+const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
 
 const plantSchema = z.object({
   plantName: string(),
@@ -34,8 +35,6 @@ async function PlantDetails({ params, searchParams }: Params) {
   const result = plantSchema.safeParse(plantInfo);
 
   if (result.success === false) {
-    console.log(result.error);
-
     redirect('/plants');
   }
   const p = result.data;
@@ -97,7 +96,9 @@ async function PlantDetails({ params, searchParams }: Params) {
           <h2 className="text-2xl font-semibold">
             Report for: {format(new Date(year, month, 1), 'LLLL, u')}{' '}
           </h2>
-          <Charts dailyData={data.data.data} />
+
+          <Summary dailyData={data.data.data} />
+          <Chart dailyData={data.data.data} />
         </div>
       </div>
     </div>

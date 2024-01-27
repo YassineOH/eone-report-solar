@@ -15,7 +15,7 @@ interface Props {
   dailyData: FusionSolarDailyData[];
 }
 
-function Charts({ dailyData }: Props) {
+function Chart({ dailyData }: Props) {
   const data = getFormattedDailyData(dailyData);
   return (
     <div className="w-full">
@@ -24,7 +24,7 @@ function Charts({ dailyData }: Props) {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="consumption" name="total consumption" fill="#8884d8" />
+          <Bar dataKey="consumption" name="consumption" fill="#8884d8" />
           <Bar dataKey="grid" stackId="production" name="grid" fill="#82ca9d" />
           <Bar
             dataKey="solar"
@@ -38,4 +38,4 @@ function Charts({ dailyData }: Props) {
     </div>
   );
 }
-export default Charts;
+export default Chart;
