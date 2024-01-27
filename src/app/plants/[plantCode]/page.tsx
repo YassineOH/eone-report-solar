@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { format } from 'date-fns';
 import { Zap, MapPin, PlugZap, Key } from 'lucide-react';
+import ChooseMonth from '@/components/ChooseMonth';
 
 const Charts = dynamic(() => import('@/components/Charts'), { ssr: false });
 
@@ -505,14 +506,14 @@ async function PlantDetails({ params }: Params) {
   const p = {
     capacity: 3,
     plantAddress: 'Casablanca',
-    gridConnectionDate: 'Sat Jan 27 2024 16:29:37 GMT+0100 (GMT+01:00',
+    gridConnectionDate: '2023-09-16T10:18:21+01:00',
     plantCode: 'testcode',
   };
 
   return (
     <div className="w-full max-w-[1440px] space-y-12 ">
       <div className="flex items-start justify-between gap-x-8">
-        <div className="flex flex-1 flex-col items-start gap-y-6">
+        <div className="flex  flex-col items-start gap-y-6">
           <h2 className="text-5xl font-bold">Solar Installation Name</h2>
           <div className="flex flex-col items-start gap-y-2">
             <div className="flex items-center gap-x-1 text-gray-500">
@@ -533,14 +534,11 @@ async function PlantDetails({ params }: Params) {
             </div>
           </div>
         </div>
-        <Charts dailyData={mockData} />
+        <div className="flex w-full flex-1 flex-col items-center justify-start gap-y-8">
+          <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
+          <Charts dailyData={mockData} />
+        </div>
       </div>
-
-      {/* <ol className="list-disc">
-        {mockData.map((m) => (
-          <li key={m.collectTime}>{JSON.stringify(m.dataItemMap)}</li>
-        ))}
-      </ol> */}
     </div>
   );
 }

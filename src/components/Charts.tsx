@@ -18,7 +18,7 @@ interface Props {
 function Charts({ dailyData }: Props) {
   const data = getFormattedDailyData(dailyData);
   return (
-    <div className="w-full flex-1">
+    <div className="w-full">
       <ResponsiveContainer height={200}>
         <BarChart data={data} width={700} height={200}>
           <XAxis dataKey="name" />
