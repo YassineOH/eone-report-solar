@@ -47,11 +47,15 @@ function ChooseMonth({ gridConnectionDate }: Props) {
     replace(`${pathname}?${params.toString()}`);
   };
 
-  if (year === currentYear.toString() && month > startingMonth.toString()) {
-    handleGettingData({ value: startingMonth.toString(), type: 'month' });
-  }
-  if (year === startingYear.toString() && month < currentMonth.toString()) {
+  if (year === currentYear.toString() && Number(month) > currentMonth) {
+    console.log('first');
+
     handleGettingData({ value: currentMonth.toString(), type: 'month' });
+  }
+  if (year === startingYear.toString() && Number(month) < startingMonth) {
+    console.log('it should run here');
+
+    handleGettingData({ value: startingMonth.toString(), type: 'month' });
   }
 
   return (

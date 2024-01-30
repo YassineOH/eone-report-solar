@@ -1,7 +1,8 @@
+import axios from 'axios';
+import { cache } from 'react';
 import { DailyData } from '@/types/dailyData';
 import { ReLOGIN, ToManyRequest } from '@/types/login';
 import { Plants } from '@/types/plants';
-import axios from 'axios';
 
 export const loginToFusionSolar = async ({
   password,
@@ -16,7 +17,7 @@ export const loginToFusionSolar = async ({
   });
 };
 
-export const getPlants = ({ token }: { token: string }) => {
+export const getPlants = cache(({ token }: { token: string }) => {
   return axios.post<Plants | ReLOGIN | ToManyRequest>(
     'https://eu5.fusionsolar.huawei.com/thirdData/stations',
     {
@@ -29,7 +30,7 @@ export const getPlants = ({ token }: { token: string }) => {
       },
     },
   );
-};
+});
 
 export const getDailyData = ({
   token,
