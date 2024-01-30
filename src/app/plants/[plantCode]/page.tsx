@@ -1,13 +1,14 @@
-import { getDailyData } from '@/lib/huawei-api';
-import { FusionSolarDailyData } from '@/types/dailyData';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import { format } from 'date-fns';
 import { Zap, MapPin, PlugZap, Key } from 'lucide-react';
+import { format } from 'date-fns';
+import { number, string, z } from 'zod';
+
+import { redirect } from 'next/navigation';
+import { getDailyData } from '@/lib/huawei-api';
 import ChooseMonth from '@/components/ChooseMonth';
 
-import { number, string, z } from 'zod';
 import Summary from '@/components/Summary';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
@@ -72,32 +73,47 @@ async function PlantDetails({ params, searchParams }: Params) {
   }
 
   return (
-    <div className="w-full max-w-[1440px] space-y-12 ">
-      <div className="flex flex-col items-center justify-between gap-x-8 px-12 lg:flex-row lg:items-start lg:px-0">
+    <div className="w-full max-w-[1440px] space-y-12">
+      <div className="flex flex-col items-center justify-between gap-x-8 gap-y-12 divide-y px-12 lg:flex-row lg:items-start lg:gap-y-0 lg:divide-y-0">
         <div className="flex flex-col items-stretch gap-y-6">
-          <h1 className="text-5xl font-bold">{p.plantName} </h1>
-          <div className="flex flex-col items-start gap-y-2">
-            <div className="flex items-center gap-x-1 text-gray-500">
+          <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-inherit xl:text-5xl">
+            {p.plantName}{' '}
+          </h1>
+          <div className="flex flex-col items-start gap-y-2 border-b-0 lg:border-b">
+            <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <Zap className="h-5 w-4" />
               Capacity: {p.capacity}kWp.
             </div>
-            <div className="flex items-center gap-x-1 text-gray-500">
+            <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <MapPin className="h-5 w-4" />
               Address: {p.plantAddress}.
             </div>
-            <div className="flex items-center gap-x-1 text-gray-500">
+            <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <PlugZap className="h-5 w-4" />
               Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
             </div>
-            <div className="flex items-center gap-x-1 text-gray-500">
+            <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <Key className="h-5 w-4" />
               Plant id: {params.plantCode.replace('%3D', '=')}
             </div>
           </div>
+          <div className="flex w-full flex-col items-center gap-y-4">
+            <p className="text-lg font-light uppercase text-gray-400 sm:text-base lg:text-xl">
+              powered by
+            </p>
+            <Image
+              alt="e-one logo"
+              src="../logo.svg"
+              width={280}
+              height={61.34}
+              className="w-40 lg:w-60 xl:w-[280px]"
+            />
+          </div>
         </div>
-        <div className="flex w-full flex-1 flex-col items-center justify-start gap-y-12">
+
+        <div className="flex w-full flex-1 flex-col items-center justify-start gap-y-6  pt-12 lg:gap-y-12 lg:pt-0">
           <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-lg font-semibold  lg:text-2xl">
             Report for: {format(new Date(year, month, 1), 'LLLL, u')}{' '}
           </h2>
           {data.data.data.length === 0 ? (

@@ -55,12 +55,12 @@ function ChooseMonth({ gridConnectionDate }: Props) {
   }
 
   return (
-    <div className="flex w-full items-center justify-evenly ">
+    <div className="flex w-full items-center justify-evenly">
       <Select
         onValueChange={(value) => handleGettingData({ value, type: 'year' })}
         defaultValue={year}
       >
-        <SelectTrigger className="w-40">
+        <SelectTrigger className="w-36 md:w-40">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -75,7 +75,7 @@ function ChooseMonth({ gridConnectionDate }: Props) {
         onValueChange={(value) => handleGettingData({ value, type: 'month' })}
         defaultValue={month}
       >
-        <SelectTrigger className="w-40">
+        <SelectTrigger className="w-36 md:w-40">
           <SelectValue placeholder="month" />
         </SelectTrigger>
         <SelectContent>
