@@ -25,7 +25,7 @@ function Summary({ dailyData }: Props) {
             Solar Production:
           </span>
           <p className="text-lg font-bold">
-            {data.solarPowerConsumed.toFixed(2)} kWh. 22
+            {data.solarPowerConsumed.toFixed(2)} kWh.
           </p>
         </div>
       </div>

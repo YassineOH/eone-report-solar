@@ -30,6 +30,8 @@ interface Params {
   };
 }
 
+export const revalidate = 3600 * 8;
+
 async function PlantDetails({ params, searchParams }: Params) {
   const plantInfo = JSON.parse(searchParams.plantInfo);
   const result = plantSchema.safeParse(plantInfo);
@@ -61,7 +63,9 @@ async function PlantDetails({ params, searchParams }: Params) {
   if (data.data.failCode === 407) {
     return (
       <div className="flex flex-col items-center gap-y-4">
+        <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
         <h2 className="text-center text-lg font-semibold">To many requests</h2>
+        <h3>Report for: {format(new Date(year, month, 1), 'LLLL, u')} </h3>
         <p className="text-gray-500">Please wait one minute and try later...</p>
       </div>
     );
@@ -69,7 +73,7 @@ async function PlantDetails({ params, searchParams }: Params) {
 
   return (
     <div className="w-full max-w-[1440px] space-y-12 ">
-      <div className="flex items-start justify-between gap-x-8">
+      <div className="flex flex-col items-center justify-between gap-x-8 px-12 lg:flex-row lg:items-start lg:px-0">
         <div className="flex flex-col items-stretch gap-y-6">
           <h1 className="text-5xl font-bold">{p.plantName} </h1>
           <div className="flex flex-col items-start gap-y-2">
@@ -96,9 +100,18 @@ async function PlantDetails({ params, searchParams }: Params) {
           <h2 className="text-2xl font-semibold">
             Report for: {format(new Date(year, month, 1), 'LLLL, u')}{' '}
           </h2>
-
-          <Summary dailyData={data.data.data} />
-          <Chart dailyData={data.data.data} />
+          {data.data.data.length === 0 ? (
+            <div>
+              <h2 className="text-center text-lg font-semibold">
+                There&apos;s no records for this month{' '}
+              </h2>
+            </div>
+          ) : (
+            <>
+              <Summary dailyData={data.data.data} />
+              <Chart dailyData={data.data.data} />
+            </>
+          )}
         </div>
       </div>
     </div>

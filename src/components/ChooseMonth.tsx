@@ -1,6 +1,5 @@
 'use client';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
 import {
   Select,
   SelectTrigger,
@@ -9,27 +8,22 @@ import {
   SelectContent,
 } from './ui/select';
 import { MONTHS, allYears } from '@/lib/years-months';
-import { Button } from './ui/button';
-import { ArrowRight } from 'lucide-react';
 
 interface Props {
   gridConnectionDate: string;
 }
 
+type SetDate =
+  | { type: 'month'; value: string }
+  | {
+      type: 'year';
+      value: string;
+    };
+
 function ChooseMonth({ gridConnectionDate }: Props) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [year, setYear] = useState<string | null>(null);
-  const [month, setMonth] = useState<string | null>(null);
-
-  const handleGettingData = () => {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('m', month + '');
-    params.set('y', year + '');
-    replace(`${pathname}?${params.toString()}`);
-  };
 
   const startingYear = new Date(gridConnectionDate).getFullYear();
   const startingMonth = new Date(gridConnectionDate).getUTCMonth();
@@ -37,11 +31,37 @@ function ChooseMonth({ gridConnectionDate }: Props) {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getUTCMonth();
 
+  const month = searchParams.get('m') ?? currentMonth.toString();
+  const year = searchParams.get('y') ?? currentYear.toString();
+
+  const handleGettingData = ({ type, value }: SetDate) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (type === 'month') {
+      params.set('m', value);
+      params.set('y', year);
+    } else if (type === 'year') {
+      params.set('m', month);
+      params.set('y', value);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+  if (year === currentYear.toString() && month > startingMonth.toString()) {
+    handleGettingData({ value: startingMonth.toString(), type: 'month' });
+  }
+  if (year === startingYear.toString() && month < currentMonth.toString()) {
+    handleGettingData({ value: currentMonth.toString(), type: 'month' });
+  }
+
   return (
     <div className="flex w-full items-center justify-evenly ">
-      <Select onValueChange={(v) => setYear(v)}>
+      <Select
+        onValueChange={(value) => handleGettingData({ value, type: 'year' })}
+        defaultValue={year}
+      >
         <SelectTrigger className="w-40">
-          <SelectValue placeholder="year" />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
           {allYears(startingYear).map((y) => (
@@ -51,7 +71,10 @@ function ChooseMonth({ gridConnectionDate }: Props) {
           ))}
         </SelectContent>
       </Select>
-      <Select onValueChange={(v) => setMonth(v)}>
+      <Select
+        onValueChange={(value) => handleGettingData({ value, type: 'month' })}
+        defaultValue={month}
+      >
         <SelectTrigger className="w-40">
           <SelectValue placeholder="month" />
         </SelectTrigger>
@@ -70,9 +93,6 @@ function ChooseMonth({ gridConnectionDate }: Props) {
           ))}
         </SelectContent>
       </Select>
-      <Button className="w-40" onClick={handleGettingData}>
-        Get Data <ArrowRight />
-      </Button>
     </div>
   );
 }
