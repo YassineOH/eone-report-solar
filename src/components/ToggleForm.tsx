@@ -5,16 +5,16 @@ import autoAnimate from '@formkit/auto-animate';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { AxiosError } from 'axios';
+import { useMutation } from '@tanstack/react-query';
 
 import Instructions from './Instructions';
 import { Button } from './ui/button';
 import { Input, InputProps } from './ui/input';
 import { Label } from './ui/label';
-import { useMutation } from '@tanstack/react-query';
 import { loginToFusionSolar } from '@/lib/huawei-api';
-import { AxiosError } from 'axios';
 import { Card, CardContent, CardHeader } from './ui/card';
-import { useRouter } from 'next/navigation';
 
 const credentialsSchema = z.object({
   username: z.string({ required_error: 'the username is required' }).min(3),
@@ -96,7 +96,7 @@ const CredentialsForm = () => {
       ref={parent}
     >
       {!!errorMsg && (
-        <Card className="w-full bg-red-50 text-center  text-red-900 shadow-red-50">
+        <Card className="w-full bg-red-50 text-center text-red-900 shadow-red-50">
           <CardHeader className="text-lg font-semibold capitalize">
             An error occurred.
           </CardHeader>

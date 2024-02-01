@@ -6,10 +6,11 @@ import { format } from 'date-fns';
 import { number, string, z } from 'zod';
 
 import { redirect } from 'next/navigation';
-import { getDailyData } from '@/lib/huawei-api';
+import { getDailyData2 } from '@/lib/huawei-api';
 import ChooseMonth from '@/components/ChooseMonth';
 
 import Summary from '@/components/Summary';
+import FinancialReport from '@/components/FinancialReport';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
 
@@ -42,8 +43,12 @@ async function PlantDetails({ params, searchParams }: Params) {
   }
   const p = result.data;
 
-  const year = Number(searchParams.y) || new Date().getFullYear();
-  const month = Number(searchParams.m) || new Date().getUTCMonth();
+  const year = searchParams.y
+    ? Number(searchParams.y)
+    : new Date().getFullYear();
+  const month = searchParams.m
+    ? Number(searchParams.m)
+    : new Date().getUTCMonth();
 
   const token = cookies().get('xsrf-token')?.value;
 
@@ -51,23 +56,24 @@ async function PlantDetails({ params, searchParams }: Params) {
     redirect('/');
   }
 
-  const data = await getDailyData({
+  const data = await getDailyData2({
     token,
     stationCodes: params.plantCode.replace('%3D', '='),
     collectTime: new Date(year, month, 1).getTime(),
   });
 
-  if (data.data.failCode === 305) {
+  if (data.failCode === 305) {
     redirect('/');
   }
 
-  if (data.data.failCode === 407) {
+  if (data.failCode === 407) {
     return (
       <div className="flex flex-col items-center gap-y-4">
         <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
         <h2 className="text-center text-lg font-semibold">To many requests</h2>
         <h3>Report for: {format(new Date(year, month, 1), 'LLLL, u')} </h3>
         <p className="text-gray-500">Please wait one minute and try later...</p>
+        <FinancialReport />
       </div>
     );
   }
@@ -97,6 +103,7 @@ async function PlantDetails({ params, searchParams }: Params) {
               Plant id: {params.plantCode.replace('%3D', '=')}
             </div>
           </div>
+          <FinancialReport />
           <div className="flex w-full flex-col items-center gap-y-4">
             <p className="text-lg font-light uppercase text-gray-400 sm:text-base lg:text-xl">
               powered by
@@ -114,9 +121,9 @@ async function PlantDetails({ params, searchParams }: Params) {
         <div className="flex w-full flex-1 flex-col items-center justify-start gap-y-6  pt-12 lg:gap-y-12 lg:pt-0">
           <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
           <h2 className="text-lg font-semibold  lg:text-2xl">
-            Report for: {format(new Date(year, month, 1), 'LLLL, u')}{' '}
+            Report for: {format(new Date(year, month, 2), 'LLLL, u')}{' '}
           </h2>
-          {data.data.data.length === 0 ? (
+          {data.data.length === 0 ? (
             <div>
               <h2 className="text-center text-lg font-semibold">
                 There&apos;s no records for this month{' '}
@@ -124,8 +131,8 @@ async function PlantDetails({ params, searchParams }: Params) {
             </div>
           ) : (
             <>
-              <Summary dailyData={data.data.data} />
-              <Chart dailyData={data.data.data} />
+              <Summary dailyData={data.data} />
+              <Chart dailyData={data.data} />
             </>
           )}
         </div>

@@ -55,3 +55,31 @@ export const getDailyData = ({
     },
   );
 };
+
+export const getDailyData2 = async ({
+  token,
+  stationCodes,
+  collectTime,
+}: {
+  token: string;
+  stationCodes: string;
+  collectTime: number;
+}): Promise<DailyData | ReLOGIN | ToManyRequest> => {
+  const data = await fetch(
+    'https://eu5.fusionsolar.huawei.com/thirdData/getKpiStationDay',
+    {
+      body: JSON.stringify({
+        collectTime,
+        stationCodes,
+      }),
+      headers: {
+        'xsrf-token': token,
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 * 8 },
+      method: 'POST',
+    },
+  );
+
+  return data.json();
+};
