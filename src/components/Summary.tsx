@@ -8,17 +8,20 @@ import {
   Sun,
   Trees,
   UtilityPole,
+  Coins,
+  CalendarCheck,
 } from 'lucide-react';
 import Result from './Result';
 
 interface Props {
   dailyData: FusionSolarDailyData[];
   totalPower: number;
+  numberOfMonth: number;
   rate?: string;
   cost?: string;
 }
 
-function Summary({ dailyData, totalPower, cost, rate }: Props) {
+function Summary({ dailyData, totalPower, cost, rate, numberOfMonth }: Props) {
   const data = getMonthData(dailyData);
 
   const results = [
@@ -61,6 +64,27 @@ function Summary({ dailyData, totalPower, cost, rate }: Props) {
     },
   ];
 
+  const financialResults = [];
+  const monthlyPower = totalPower / numberOfMonth;
+  if (cost !== undefined && rate !== undefined) {
+    financialResults.push(
+      {
+        title: 'Total saving',
+        unit: 'MAD',
+        value: Number(rate) * totalPower,
+        Icon: Coins,
+      },
+      {
+        title: 'The remaining estimated of ROI',
+        unit: 'Month',
+        value:
+          (Number(cost) - Number(rate) * totalPower) /
+          (monthlyPower * Number(rate)),
+        Icon: CalendarCheck,
+      },
+    );
+  }
+
   return (
     <div className="flex w-auto flex-col items-stretch gap-y-4 lg:w-full xl:w-4/5">
       <div className="mb-12 grid w-full grid-cols-1 items-stretch gap-y-2 md:mb-0 md:grid-cols-2  lg:grid-cols-3 lg:gap-y-0 ">
@@ -68,7 +92,10 @@ function Summary({ dailyData, totalPower, cost, rate }: Props) {
           <Result {...r} key={r.title} />
         ))}
       </div>
-      <div className="flex flex-col items-center justify-between px-6 lg:flex-row"></div>
+      <div className="flex flex-col items-center justify-between px-6 lg:flex-row">
+        {financialResults.length > 1 &&
+          financialResults.map((r) => <Result {...r} key={r.title} />)}
+      </div>
     </div>
   );
 }

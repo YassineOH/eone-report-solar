@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import { Zap, MapPin, PlugZap, Key } from 'lucide-react';
+import { Zap, MapPin, PlugZap, Key, ArrowLeftFromLine } from 'lucide-react';
 import { format } from 'date-fns';
 import { number, string, z } from 'zod';
 
@@ -12,6 +12,8 @@ import ChooseMonth from '@/components/ChooseMonth';
 import Summary from '@/components/Summary';
 import FinancialReport from '@/components/FinancialReport';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { buttonVariants } from '@/components/ui/button';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
 
@@ -96,10 +98,26 @@ async function PlantDetails({ params, searchParams }: Params) {
         ? 'OFFLINE'
         : 'FAULTY';
   const totalPower = plantData.data[0].dataItemMap.total_power;
+  const numberOfMonth =
+    (new Date().getTime() -
+      new Date(result.data.gridConnectionDate).getTime()) /
+    (1000 * 60 * 60 * 24 * 30);
   return (
     <div className="w-full max-w-[1440px] space-y-12">
       <div className="flex flex-col items-center justify-between gap-x-8 gap-y-12 divide-y px-12 lg:flex-row lg:items-start lg:gap-y-0 lg:divide-y-0">
         <div className="flex flex-col items-stretch gap-y-6">
+          <div className="w-full">
+            <Link
+              href="/plants"
+              className={buttonVariants({
+                variant: 'link',
+                className: 'flex items-center justify-start gap-x-2',
+              })}
+            >
+              <ArrowLeftFromLine />
+              Go back
+            </Link>
+          </div>
           <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-inherit xl:text-5xl">
             {p.plantName}{' '}
           </h1>
@@ -168,6 +186,7 @@ async function PlantDetails({ params, searchParams }: Params) {
                 cost={cost}
                 rate={rate}
                 totalPower={totalPower}
+                numberOfMonth={numberOfMonth}
               />
               <Chart dailyData={data.data} />
             </>
