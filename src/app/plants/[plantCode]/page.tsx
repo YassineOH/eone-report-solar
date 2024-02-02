@@ -6,11 +6,12 @@ import { format } from 'date-fns';
 import { number, string, z } from 'zod';
 
 import { redirect } from 'next/navigation';
-import { getDailyData2 } from '@/lib/huawei-api';
+import { getDailyData2, getPlantData } from '@/lib/huawei-api';
 import ChooseMonth from '@/components/ChooseMonth';
 
 import Summary from '@/components/Summary';
 import FinancialReport from '@/components/FinancialReport';
+import { Badge } from '@/components/ui/badge';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
 
@@ -29,20 +30,28 @@ interface Params {
     m?: string;
     y?: string;
     plantInfo: string;
+    cost?: string;
+    rate?: string;
   };
 }
 
 export const revalidate = 3600 * 8;
 
 async function PlantDetails({ params, searchParams }: Params) {
+  const token = cookies().get('xsrf-token')?.value;
+
+  if (!token) {
+    redirect('/');
+  }
+
   const plantInfo = JSON.parse(searchParams.plantInfo);
   const result = plantSchema.safeParse(plantInfo);
 
   if (result.success === false) {
     redirect('/plants');
   }
-  const p = result.data;
 
+  const p = result.data;
   const year = searchParams.y
     ? Number(searchParams.y)
     : new Date().getFullYear();
@@ -50,11 +59,13 @@ async function PlantDetails({ params, searchParams }: Params) {
     ? Number(searchParams.m)
     : new Date().getUTCMonth();
 
-  const token = cookies().get('xsrf-token')?.value;
+  const cost = searchParams.cost;
+  const rate = searchParams.rate;
 
-  if (!token) {
-    redirect('/');
-  }
+  const plantData = await getPlantData({
+    token,
+    stationCodes: params.plantCode.replace('%3D', '='),
+  });
 
   const data = await getDailyData2({
     token,
@@ -62,11 +73,11 @@ async function PlantDetails({ params, searchParams }: Params) {
     collectTime: new Date(year, month, 1).getTime(),
   });
 
-  if (data.failCode === 305) {
+  if (data.failCode === 305 || plantData.failCode === 305) {
     redirect('/');
   }
 
-  if (data.failCode === 407) {
+  if (data.failCode === 407 || plantData.failCode === 407) {
     return (
       <div className="flex flex-col items-center gap-y-4">
         <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
@@ -78,6 +89,13 @@ async function PlantDetails({ params, searchParams }: Params) {
     );
   }
 
+  const plantStatus =
+    plantData.data[0].dataItemMap.real_health_state === 3
+      ? 'WORKING'
+      : plantData.data[0].dataItemMap.real_health_state === 1
+        ? 'OFFLINE'
+        : 'FAULTY';
+  const totalPower = plantData.data[0].dataItemMap.total_power;
   return (
     <div className="w-full max-w-[1440px] space-y-12">
       <div className="flex flex-col items-center justify-between gap-x-8 gap-y-12 divide-y px-12 lg:flex-row lg:items-start lg:gap-y-0 lg:divide-y-0">
@@ -85,6 +103,20 @@ async function PlantDetails({ params, searchParams }: Params) {
           <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-inherit xl:text-5xl">
             {p.plantName}{' '}
           </h1>
+          <div className="flex items-center justify-center gap-x-2">
+            <p className="text-semibold">Current status of the plant:</p>
+            <Badge
+              variant={
+                plantStatus === 'WORKING'
+                  ? 'default'
+                  : plantStatus === 'OFFLINE'
+                    ? 'secondary'
+                    : 'destructive'
+              }
+            >
+              {plantStatus}
+            </Badge>
+          </div>
           <div className="flex flex-col items-start gap-y-2 border-b-0 lg:border-b">
             <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <Zap className="h-5 w-4" />
@@ -131,7 +163,12 @@ async function PlantDetails({ params, searchParams }: Params) {
             </div>
           ) : (
             <>
-              <Summary dailyData={data.data} />
+              <Summary
+                dailyData={data.data}
+                cost={cost}
+                rate={rate}
+                totalPower={totalPower}
+              />
               <Chart dailyData={data.data} />
             </>
           )}

@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { DailyData } from '@/types/dailyData';
 import { ReLOGIN, ToManyRequest } from '@/types/login';
 import { Plants } from '@/types/plants';
+import { PlantData } from '@/types/plantData';
 
 export const loginToFusionSolar = async ({
   password,
@@ -70,6 +71,31 @@ export const getDailyData2 = async ({
     {
       body: JSON.stringify({
         collectTime,
+        stationCodes,
+      }),
+      headers: {
+        'xsrf-token': token,
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 * 8 },
+      method: 'POST',
+    },
+  );
+
+  return data.json();
+};
+
+export const getPlantData = async ({
+  token,
+  stationCodes,
+}: {
+  token: string;
+  stationCodes: string;
+}): Promise<PlantData | ReLOGIN | ToManyRequest> => {
+  const data = await fetch(
+    'https://eu5.fusionsolar.huawei.com/thirdData/getStationRealKpi',
+    {
+      body: JSON.stringify({
         stationCodes,
       }),
       headers: {
