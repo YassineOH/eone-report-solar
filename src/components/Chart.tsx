@@ -24,13 +24,13 @@ function Chart({ dailyData }: Props) {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="consumption" name="consumption" fill="#8884d8" />
-          <Bar dataKey="grid" stackId="production" name="grid" fill="#82ca9d" />
+          <Bar dataKey="consumption" name="consumption" fill="#dac1a3" />
+          <Bar dataKey="grid" stackId="production" name="grid" fill="#d29e63" />
           <Bar
             dataKey="solar"
             stackId="production"
             name="solar"
-            fill="#82339d"
+            fill="#04b9ad"
           />
           <Legend />
         </BarChart>
