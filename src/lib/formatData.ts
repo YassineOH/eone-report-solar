@@ -56,10 +56,14 @@ export const getMonthData = (data: FusionSolarDailyData[]) => {
 
   return {
     solarPowerConsumed,
-    autoProductionPercentage: (solarPowerConsumed / solarPower) * 100,
+    autoProductionPercentage:
+      solarPower === 0 ? 0 : (solarPowerConsumed / solarPower) * 100,
     totalConsumption,
     gridEnergy,
     savedCO2: (solarPowerConsumed * 0.712) / 1000,
-    coverage: (solarPowerConsumed / totalConsumption) * 100,
+    coverage:
+      totalConsumption === 0
+        ? 0
+        : (solarPowerConsumed / totalConsumption) * 100,
   };
 };
