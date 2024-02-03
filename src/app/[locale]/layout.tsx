@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import { Inter, Rubik } from 'next/font/google';
+import '../globals.css';
 import Providers from '@/components/Providers';
 import { cn } from '@/lib/utils';
 import { ControlButtons } from '@/components/ControlButtons';
 
 const inter = Inter({ subsets: ['latin'] });
+const rubik = Rubik({ subsets: ['arabic'] });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,12 +15,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { locale: 'en' | 'ar' | 'fr' };
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang={params.locale} dir={params.locale === 'ar' ? 'rlt' : 'ltr'}>
+      <body
+        className={params.locale === 'ar' ? rubik.className : inter.className}
+      >
         <Providers
           attribute="class"
           defaultTheme="system"

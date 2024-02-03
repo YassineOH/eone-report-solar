@@ -24,6 +24,7 @@
     "date-fns": "^3.3.0",
     "lucide-react": "^0.312.0",
     "next": "14.0.4",
+    "next-intl": "^3.5.4",
     "next-themes": "^0.2.1",
     "prettier": "^3.2.2",
     "prettier-plugin-tailwindcss": "^0.5.11",
