@@ -33,7 +33,7 @@ export default function RootLayout({
         >
           <main
             className={cn(
-              'mt-40 flex flex-col items-center justify-start gap-y-12 lg:mt-10 lg:gap-y-48',
+              'mt-20 flex flex-col items-center justify-start gap-y-12 lg:mt-10 lg:gap-y-48',
             )}
           >
             <div className="hidden h-10 w-full justify-between lg:flex">
@@ -42,6 +42,9 @@ export default function RootLayout({
                 <ControlButtons />
                 <div className="h-full w-60 bg-primary"></div>
               </div>
+            </div>
+            <div className="flex w-full items-center justify-center lg:hidden">
+              <ControlButtons />
             </div>
             {children}
           </main>

@@ -5,7 +5,7 @@ import autoAnimate from '@formkit/auto-animate';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/navigation';
 import { AxiosError } from 'axios';
 import { useMutation } from '@tanstack/react-query';
 
@@ -142,7 +142,9 @@ const InputWithLabel = forwardRef<HTMLInputElement, PropsInput>(
           {labelText}:
         </Label>
         <Input ref={ref} name={name} {...props} />
-        {error ? <span className="text-sm text-red-600">{error}</span> : null}
+        {error ? (
+          <span className="text-sm text-destructive">{error}</span>
+        ) : null}
       </div>
     );
   },

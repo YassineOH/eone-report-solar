@@ -9,10 +9,10 @@ import { redirect } from 'next/navigation';
 import { getDailyData2, getPlantData } from '@/lib/huawei-api';
 import ChooseMonth from '@/components/ChooseMonth';
 
+import { Link } from '@/navigation';
 import Summary from '@/components/Summary';
 import FinancialReport from '@/components/FinancialReport';
 import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/button';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
@@ -160,7 +160,7 @@ async function PlantDetails({ params, searchParams }: Params) {
             </p>
             <Image
               alt="e-one logo"
-              src="../logo.svg"
+              src="../../logo.svg"
               width={280}
               height={61.34}
               className="w-40 lg:w-60 xl:w-[280px]"

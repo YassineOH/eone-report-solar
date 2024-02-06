@@ -8,12 +8,12 @@ import {
 } from '@/components/ui/card';
 import { getPlants } from '@/lib/huawei-api';
 import { cookies } from 'next/headers';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 import { redirect } from 'next/navigation';
 import { Key, MapPin, PlugZap, Zap } from 'lucide-react';
 import { format } from 'date-fns';
 
-async function Plants() {
+async function Plants({ params: { locale } }: { params: { locale: string } }) {
   const token = cookies().get('xsrf-token')?.value;
 
   if (!token) {
@@ -39,7 +39,9 @@ async function Plants() {
 
   return (
     <div className="w-full max-w-[1440px] space-y-12 ">
-      <h2 className="text-semibold text-center text-5xl">Choose your plant</h2>
+      <h2 className="text-semibold text-center text-3xl md:text-4xl xl:text-5xl">
+        Choose your plant
+      </h2>
       <div className="grid grid-cols-1 gap-4 px-12 md:grid-cols-2 xl:grid-cols-3">
         {data.data.data.list.map((p) => {
           const encodedData = encodeURIComponent(
