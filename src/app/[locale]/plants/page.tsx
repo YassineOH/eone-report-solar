@@ -60,19 +60,19 @@ async function Plants({ params: { locale } }: { params: { locale: string } }) {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col items-start gap-y-2">
-                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <Zap className="h-5 w-4" />
                     Capacity: {p.capacity}kWp.
                   </div>
-                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <MapPin className="h-5 w-4" />
                     Address: {p.plantAddress}.
                   </div>
-                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <PlugZap className="h-5 w-4" />
                     Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
                   </div>
-                  <div className="flex items-center gap-x-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <Key className="h-5 w-4" />
                     Plant id: {p.plantCode}
                   </div>
