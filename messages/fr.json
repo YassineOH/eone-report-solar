@@ -1,0 +1,55 @@
+{
+    "Home": {
+        "title": "Téléchargez le rapport de vos centrales solaires",
+        "poweredBy": "présente par",
+        "instruction": {
+            "question": "Comment obtenir mes identifiants ?",
+            "1": "Rendez-vous sur le site Web <fusion>FusionSolar</fusion> et connectez-vous.",
+            "2": "Accédez à <bold>Plus > Système > Gestion de l'entreprise > Gestion Northbound. </bold>",
+            "3": {
+                "title": "Cliquez sur Ajouter et remplissez les informations suivantes :",
+                "p1": {
+                    "value": "Nom du système"
+                },
+                "p2": {
+                    "value": "Date limite"
+                },
+                "p3": {
+                    "value": "Nom utilisateur"
+                },
+                "p4": {
+                    "value": "Mot de passe"
+                },
+                "p5": {
+                    "value": "Compte associé"
+                }
+            },
+            "4": {
+                "title": "Sélectionnez tous les types de données dans les options suivantes:",
+                "p1": {
+                    "value": "Liste des centrale"
+                },
+                "p2": {
+                    "value": "Données de la centrale en temps réel"
+                },
+                "p3": {
+                    "value": "Données quotidiennes de la centrale"
+                },
+                "p4": {
+                    "value": "Données mensuelles de la centrale"
+                },
+                "p5": {
+                    "value": "Données annuelles de la centrale"
+                }
+            },
+            "switch": "J'ai mes <switch>identifiants</switch>"
+        },
+        "login": {
+            "title": "Entrez vos identifiants",
+            "username": "Nom d'utilisateur",
+            "password": "Mot de passe",
+            "submit": "Soumettre",
+            "switch": "Comment puis-je obtenir mes <switch>identifiants</switch>?"
+        }
+    }
+}

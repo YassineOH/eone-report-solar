@@ -4,6 +4,7 @@ import '../globals.css';
 import Providers from '@/components/Providers';
 import { cn } from '@/lib/utils';
 import { ControlButtons } from '@/components/ControlButtons';
+import { NextIntlClientProvider, useMessages } from 'next-intl';
 
 const inter = Inter({ subsets: ['latin'] });
 const rubik = Rubik({ subsets: ['arabic'] });
@@ -20,6 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
   params: { locale: 'en' | 'ar' | 'fr' };
 }) {
+  const messages = useMessages();
   return (
     <html lang={params.locale} dir={params.locale === 'ar' ? 'rlt' : 'ltr'}>
       <body
@@ -30,10 +32,12 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
+          locale={params.locale}
+          some={JSON.stringify(messages)}
         >
           <main
             className={cn(
-              'mt-20 flex flex-col items-center justify-start gap-y-12 lg:mt-10 lg:gap-y-48',
+              'mt-20 flex flex-col items-center justify-start gap-y-12 lg:mt-10 lg:gap-y-28',
             )}
           >
             <div className="hidden h-10 w-full justify-between lg:flex">

@@ -12,7 +12,7 @@ export default function Home() {
         </h1>
         <div className="flex w-full flex-col items-center gap-y-4">
           <p className="text-lg font-light uppercase text-gray-400 sm:text-xl lg:text-3xl">
-            powered by
+            {t('poweredBy')}
           </p>
           <Image
             alt="e-one logo"

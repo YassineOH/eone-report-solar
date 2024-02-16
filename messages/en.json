@@ -1,0 +1,55 @@
+{
+    "Home": {
+        "title": "Download the report of your solar plants",
+        "poweredBy": "powered by",
+        "instruction": {
+            "question": "How I get my credentials ?",
+            "1": "Head to <fusion>FusionSolar</fusion> website and login.",
+            "2": "Go <bold>More > System > Company Management > Northbound Management. </bold>",
+            "3": {
+                "title": "Click Add and fill-in the following informations:",
+                "p1": {
+                    "value": "System name"
+                },
+                "p2": {
+                    "value": "Date"
+                },
+                "p3": {
+                    "value": "User Name"
+                },
+                "p4": {
+                    "value": "Password"
+                },
+                "p5": {
+                    "value": "Associated"
+                }
+            },
+            "4": {
+                "title": "Select all the types of data in the following options:",
+                "p1": {
+                    "value": "Plant list"
+                },
+                "p2": {
+                    "value": "Real-time plant data"
+                },
+                "p3": {
+                    "value": "Daily plant data"
+                },
+                "p4": {
+                    "value": "Monthly plant data"
+                },
+                "p5": {
+                    "value": "Yearly plant data"
+                }
+            },
+            "switch": "I have my <switch>credentials</switch>"
+        },
+        "login": {
+            "title": "Enter your credentials",
+            "username": "Username",
+            "password": "Password",
+            "submit": "Submit",
+            "switch": "How I get my <switch>credentials</switch>?"
+        }
+    }
+}

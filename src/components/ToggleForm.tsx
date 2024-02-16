@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from '@/navigation';
 import { AxiosError } from 'axios';
+import { useTranslations } from 'next-intl';
 import { useMutation } from '@tanstack/react-query';
 
 import Instructions from './Instructions';
@@ -24,6 +25,8 @@ const credentialsSchema = z.object({
 type CredentialsType = z.infer<typeof credentialsSchema>;
 
 function ToggleForm() {
+  const t = useTranslations('Home');
+
   const [current, setCurrent] = useState<'instructions' | 'form'>(
     'instructions',
   );
@@ -34,22 +37,41 @@ function ToggleForm() {
       ref={parent}
     >
       <p className="text-center text-lg sm:text-xl lg:text-3xl">
-        {current === 'form'
-          ? 'Enter your credentials'
-          : 'How I get my credentials?'}
+        {current === 'form' ? t('login.title') : t('instruction.question')}
       </p>
       {current === 'instructions' ? <Instructions /> : <CredentialsForm />}
       <p className="text-base">
-        {current === 'instructions' ? ' I have my ' : 'how I get my '}
-        <Button
-          className="my-0 inline px-0 text-base"
-          variant="link"
-          onClick={() =>
-            setCurrent((prev) => (prev === 'form' ? 'instructions' : 'form'))
-          }
-        >
-          credentials
-        </Button>
+        {current === 'instructions'
+          ? t.rich('instruction.switch', {
+              switch: (v) => (
+                <Button
+                  className="my-0 inline px-0 text-base"
+                  variant="link"
+                  onClick={() =>
+                    setCurrent((prev) =>
+                      prev === 'form' ? 'instructions' : 'form',
+                    )
+                  }
+                >
+                  {v}
+                </Button>
+              ),
+            })
+          : t.rich('login.switch', {
+              switch: (v) => (
+                <Button
+                  className="my-0 inline px-0 text-base"
+                  variant="link"
+                  onClick={() =>
+                    setCurrent((prev) =>
+                      prev === 'form' ? 'instructions' : 'form',
+                    )
+                  }
+                >
+                  {v}
+                </Button>
+              ),
+            })}
       </p>
     </div>
   );
@@ -57,6 +79,8 @@ function ToggleForm() {
 export default ToggleForm;
 
 const CredentialsForm = () => {
+  const t = useTranslations('Home');
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
   const {
@@ -106,19 +130,19 @@ const CredentialsForm = () => {
       <InputWithLabel
         {...register('username')}
         type="text"
-        labelText="username"
+        labelText={t('login.username')}
         disabled={isPending}
         error={errors.username?.message}
       />
       <InputWithLabel
         {...register('password')}
         type="password"
-        labelText="password"
+        labelText={t('login.password')}
         disabled={isPending}
         error={errors.password?.message}
       />
       <Button type="submit" disabled={isPending || !isValid}>
-        Submit
+        {t('login.submit')}
       </Button>
     </form>
   );

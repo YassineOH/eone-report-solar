@@ -1,0 +1,55 @@
+{
+    "Home": {
+        "title": "قم بتنزيل تقرير محطات الطاقة الشمسية الخاصة بك",
+        "poweredBy": "مقدمة من طرف",
+        "instruction": {
+            "question": "كيف يمكنني الحصول على بيانات الاعتماد الخاصة بي؟",
+            "1": "انتقل إلى موقع <fusion>FusionSolar</fusion> وقم بتسجيل الدخول و إختيار اللغة الإنجليزية.",
+            "2": "اِذهب إلى <bold>Plus > Système > Gestion de l'entreprise > Gestion Northbound. </bold>",
+            "3": {
+                "title": "انقر فوق 'Add' واملأ المعلومات التالية:",
+                "p1": {
+                    "value": "System name"
+                },
+                "p2": {
+                    "value": "Date"
+                },
+                "p3": {
+                    "value": "User Name"
+                },
+                "p4": {
+                    "value": "Password"
+                },
+                "p5": {
+                    "value": "Associated"
+                }
+            },
+            "4": {
+                "title": "حدد كافة أنواع البيانات في الخيارات التالية:",
+                "p1": {
+                    "value": "Plant list"
+                },
+                "p2": {
+                    "value": "Real-time plant data"
+                },
+                "p3": {
+                    "value": "Daily plant data"
+                },
+                "p4": {
+                    "value": "Monthly plant data"
+                },
+                "p5": {
+                    "value": "Yearly plant data"
+                }
+            },
+            "switch": "لدي <switch>بيانات الاعتماد</switch> الخاصة بي"
+        },
+        "login": {
+            "title": "أدخل بيانات الاعتماد الخاصة بك",
+            "username": "اسم المستخدم",
+            "password": "كلمة المرور",
+            "submit": "دخول",
+            "switch": "كيف أحصل على <switch>بيانات الاعتماد</switch> الخاصة بي؟"
+        }
+    }
+}
