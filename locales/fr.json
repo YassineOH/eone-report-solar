@@ -51,5 +51,19 @@
             "submit": "Soumettre",
             "switch": "Comment puis-je obtenir mes <switch>identifiants</switch>?"
         }
+    },
+    "plants": {
+        "title": "Choisissez votre installation",
+        "error": {
+            "title": "Trop de demandes",
+            "text": "Veuillez patienter dix minutes et réessayer plus tard..."
+        },
+        "card": {
+            "capacity": "Capacité",
+            "address": "Adresse",
+            "time": "Connecté au réseau sur",
+            "id": "Identifiant de l'installation",
+            "button": "Voir les détails"
+        }
     }
 }

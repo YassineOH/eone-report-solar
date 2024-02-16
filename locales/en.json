@@ -51,5 +51,19 @@
             "submit": "Submit",
             "switch": "How I get my <switch>credentials</switch>?"
         }
+    },
+    "plants": {
+        "title": "Choose your plant",
+        "error": {
+            "title": "Too many requests",
+            "text": "Please wait ten minutes and try later..."
+        },
+        "card": {
+            "capacity": "Capacity",
+            "address": "Address",
+            "time": "Connected to grid on",
+            "id": "Plant id",
+            "button": "See the details"
+        }
     }
 }

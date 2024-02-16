@@ -5,7 +5,7 @@
         "instruction": {
             "question": "كيف يمكنني الحصول على بيانات الاعتماد الخاصة بي؟",
             "1": "انتقل إلى موقع <fusion>FusionSolar</fusion> وقم بتسجيل الدخول و إختيار اللغة الإنجليزية.",
-            "2": "اِذهب إلى <bold>Plus > Système > Gestion de l'entreprise > Gestion Northbound. </bold>",
+            "2": "اِذهب إلى <bold>More > System > Company Management > Northbound Management. </bold>",
             "3": {
                 "title": "انقر فوق 'Add' واملأ المعلومات التالية:",
                 "p1": {
@@ -50,6 +50,20 @@
             "password": "كلمة المرور",
             "submit": "دخول",
             "switch": "كيف أحصل على <switch>بيانات الاعتماد</switch> الخاصة بي؟"
+        }
+    },
+    "plants": {
+        "title": "اختر محطتك الشمسية",
+        "error": {
+            "title": "طلبات كثيرة جدا",
+            "text": "من فضلك انتظر عشر دقائق ثم حاول لاحقا.."
+        },
+        "card": {
+            "capacity": "سعة",
+            "address": "عنوان",
+            "time": "متصلة بالشبكة منذ",
+            "id": "الرمز التعرفي",
+            "button": "انظر التفاصيل"
         }
     }
 }

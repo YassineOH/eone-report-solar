@@ -6,16 +6,24 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { getTranslations } from 'next-intl/server';
+
 import { getPlants } from '@/lib/huawei-api';
 import { cookies } from 'next/headers';
 import { Link } from '@/navigation';
 import { redirect } from 'next/navigation';
 import { Key, MapPin, PlugZap, Zap } from 'lucide-react';
 import { format } from 'date-fns';
+import { enUS, fr, arMA } from 'date-fns/locale';
 
-async function Plants({ params: { locale } }: { params: { locale: string } }) {
+async function Plants({
+  params: { locale },
+}: {
+  params: { locale: 'en' | 'ar' | 'fr' };
+}) {
   const token = cookies().get('xsrf-token')?.value;
 
+  const t = await getTranslations('plants');
   if (!token) {
     redirect('/');
   }
@@ -31,8 +39,10 @@ async function Plants({ params: { locale } }: { params: { locale: string } }) {
   if (data.data.failCode === 407) {
     return (
       <div className="flex flex-col items-center gap-y-4">
-        <h2 className="text-center text-lg font-semibold">To many requests</h2>
-        <p className="text-gray-500">Please wait one minute and try later...</p>
+        <h2 className="text-center text-lg font-semibold">
+          {t('error.title')}
+        </h2>
+        <p className="text-gray-500"> {t('error.text')}.</p>
       </div>
     );
   }
@@ -40,7 +50,7 @@ async function Plants({ params: { locale } }: { params: { locale: string } }) {
   return (
     <div className="w-full max-w-[1440px] space-y-12 ">
       <h2 className="text-semibold text-center text-3xl md:text-4xl xl:text-5xl">
-        Choose your plant
+        {t('title')}
       </h2>
       <div className="grid grid-cols-1 gap-4 px-12 md:grid-cols-2 xl:grid-cols-3">
         {data.data.data.list.map((p) => {
@@ -62,19 +72,25 @@ async function Plants({ params: { locale } }: { params: { locale: string } }) {
                 <div className="flex flex-col items-start gap-y-2">
                   <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <Zap className="h-5 w-4" />
-                    Capacity: {p.capacity}kWp.
+                    {t('card.capacity')}: {p.capacity}{' '}
+                    {locale === 'ar' ? 'كيلو واط' : 'kW'}.
                   </div>
                   <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <MapPin className="h-5 w-4" />
-                    Address: {p.plantAddress}.
+                    {t('card.address')}: {p.plantAddress}.
                   </div>
                   <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <PlugZap className="h-5 w-4" />
-                    Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
+                    {t('card.time')}:{' '}
+                    {format(p.gridConnectionDate, 'PP', {
+                      locale:
+                        locale === 'ar' ? arMA : locale === 'fr' ? fr : enUS,
+                    })}
+                    .
                   </div>
                   <div className="flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-300">
                     <Key className="h-5 w-4" />
-                    Plant id: {p.plantCode}
+                    {t('card.id')}: {p.plantCode}
                   </div>
                 </div>
               </CardContent>
@@ -82,8 +98,9 @@ async function Plants({ params: { locale } }: { params: { locale: string } }) {
                 <Link
                   href={`/plants/${p.plantCode}?plantInfo=${encodedData}`}
                   className={buttonVariants({ variant: 'secondary' })}
+                  prefetch={false}
                 >
-                  See the details
+                  {t('card.button')}
                 </Link>
               </CardFooter>
             </Card>

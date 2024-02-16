@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   const messages = useMessages();
   return (
-    <html lang={params.locale} dir={params.locale === 'ar' ? 'rlt' : 'ltr'}>
+    <html lang={params.locale} dir={params.locale === 'ar' ? 'rtl' : 'ltr'}>
       <body
         className={params.locale === 'ar' ? rubik.className : inter.className}
       >
