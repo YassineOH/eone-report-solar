@@ -27,38 +27,38 @@ function Summary({ dailyData, totalPower, cost, rate, numberOfMonth }: Props) {
   const results = [
     {
       value: data.solarPowerConsumed,
-      title: 'Solar Production',
+      title: 'solarPowerConsumed',
       unit: 'kWh',
       Icon: Sun,
     },
     {
       value: data.gridEnergy,
-      title: 'Grid Energy',
+      title: 'gridEnergy',
       unit: 'kWh',
       Icon: UtilityPole,
     },
     {
       value: data.totalConsumption,
-      title: 'Consumption',
+      title: 'totalConsumption',
       unit: 'kWh',
       Icon: Cable,
     },
     {
       value: data.coverage,
-      title: 'Coverage',
+      title: 'coverage',
       unit: '%',
       Icon: Percent,
     },
     {
       value: data.autoProductionPercentage,
-      title: 'Auto-consumption Ratio',
+      title: 'autoProductionPercentage',
       unit: '%',
       Icon: PercentCircle,
     },
 
     {
       value: data.savedCO2,
-      title: '  Saved CO2 Emission',
+      title: 'savedCO2',
       unit: 'To',
       Icon: Trees,
     },
@@ -69,13 +69,13 @@ function Summary({ dailyData, totalPower, cost, rate, numberOfMonth }: Props) {
   if (cost !== undefined && rate !== undefined) {
     financialResults.push(
       {
-        title: 'Total saving',
+        title: 'totalSaving',
         unit: 'MAD',
         value: Number(rate) * totalPower,
         Icon: Coins,
       },
       {
-        title: 'The remaining estimated of ROI',
+        title: 'roi',
         unit: 'Month',
         value:
           (Number(cost) - Number(rate) * totalPower) /
@@ -87,7 +87,7 @@ function Summary({ dailyData, totalPower, cost, rate, numberOfMonth }: Props) {
 
   return (
     <div className="mb-12 flex w-auto flex-col items-stretch gap-y-8 lg:w-full xl:w-4/5">
-      <div className="grid w-full grid-cols-1 items-stretch gap-y-2 md:mb-0 md:grid-cols-2  lg:grid-cols-3 lg:gap-y-0 ">
+      <div className="grid w-full grid-cols-1 items-stretch gap-y-2 md:mb-0 md:grid-cols-2  lg:grid-cols-3 lg:gap-y-4 ">
         {results.map((r) => (
           <Result {...r} key={r.title} />
         ))}

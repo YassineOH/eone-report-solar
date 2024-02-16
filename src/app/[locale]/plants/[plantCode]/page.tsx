@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic';
 import { Zap, MapPin, PlugZap, Key, ArrowLeftFromLine } from 'lucide-react';
 import { format } from 'date-fns';
 import { number, string, z } from 'zod';
+import { getTranslations } from 'next-intl/server';
+import { enUS, fr, arMA } from 'date-fns/locale';
 
 import { redirect } from 'next/navigation';
 import { getDailyData2, getPlantData } from '@/lib/huawei-api';
@@ -13,7 +15,7 @@ import { Link } from '@/navigation';
 import Summary from '@/components/Summary';
 import FinancialReport from '@/components/FinancialReport';
 import { Badge } from '@/components/ui/badge';
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
 
@@ -27,6 +29,7 @@ const plantSchema = z.object({
 interface Params {
   params: {
     plantCode: string;
+    locale: 'en' | 'ar' | 'fr';
   };
   searchParams: {
     m?: string;
@@ -40,6 +43,8 @@ interface Params {
 export const revalidate = 3600 * 8;
 
 async function PlantDetails({ params, searchParams }: Params) {
+  const t = await getTranslations();
+
   const token = cookies().get('xsrf-token')?.value;
 
   if (!token) {
@@ -82,10 +87,25 @@ async function PlantDetails({ params, searchParams }: Params) {
   if (data.failCode === 407 || plantData.failCode === 407) {
     return (
       <div className="flex flex-col items-center gap-y-4">
-        <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
-        <h2 className="text-center text-lg font-semibold">To many requests</h2>
-        <h3>Report for: {format(new Date(year, month, 1), 'LLLL, u')} </h3>
-        <p className="text-gray-500">Please wait one minute and try later...</p>
+        <ChooseMonth
+          gridConnectionDate={p.gridConnectionDate}
+          lang={params.locale}
+        />
+        <h2 className="text-center text-lg font-semibold">
+          {t('SinglePlant.error.title')}{' '}
+        </h2>
+        <h3>
+          Report for:{' '}
+          {format(new Date(year, month, 1), 'LLLL, u', {
+            locale:
+              params.locale === 'ar'
+                ? arMA
+                : params.locale === 'fr'
+                  ? fr
+                  : enUS,
+          })}{' '}
+        </h3>
+        <p className="text-gray-500">{t('SinglePlant.error.text')}.</p>
         <FinancialReport />
       </div>
     );
@@ -93,10 +113,17 @@ async function PlantDetails({ params, searchParams }: Params) {
 
   const plantStatus =
     plantData.data[0].dataItemMap.real_health_state === 3
-      ? 'WORKING'
+      ? t('SinglePlant.status.working')
       : plantData.data[0].dataItemMap.real_health_state === 1
-        ? 'OFFLINE'
-        : 'FAULTY';
+        ? t('SinglePlant.status.offline')
+        : t('SinglePlant.status.faulty');
+
+  const plantHealth =
+    plantData.data[0].dataItemMap.real_health_state === 3
+      ? 3
+      : plantData.data[0].dataItemMap.real_health_state === 1
+        ? 1
+        : 2;
   const totalPower = plantData.data[0].dataItemMap.total_power;
   const numberOfMonth =
     (new Date().getTime() -
@@ -115,19 +142,19 @@ async function PlantDetails({ params, searchParams }: Params) {
               })}
             >
               <ArrowLeftFromLine />
-              Go back
+              {t('SinglePlant.back')}
             </Link>
           </div>
           <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-inherit xl:text-5xl">
-            {p.plantName}{' '}
+            {p.plantName}
           </h1>
           <div className="flex items-center justify-center gap-x-2">
-            <p className="text-semibold">Current status of the plant:</p>
+            <p className="text-semibold">{t('SinglePlant.status.title')}</p>
             <Badge
               variant={
-                plantStatus === 'WORKING'
+                plantHealth === 3
                   ? 'default'
-                  : plantStatus === 'OFFLINE'
+                  : plantHealth === 1
                     ? 'secondary'
                     : 'destructive'
               }
@@ -138,25 +165,34 @@ async function PlantDetails({ params, searchParams }: Params) {
           <div className="flex flex-col items-start gap-y-2 border-b-0 lg:border-b">
             <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <Zap className="h-5 w-4" />
-              Capacity: {p.capacity}kWp.
+              {t('SinglePlant.info.capacity')}: {p.capacity}{' '}
+              {params.locale === 'ar' ? 'كيلو واط' : 'kW'}.
             </div>
             <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <MapPin className="h-5 w-4" />
-              Address: {p.plantAddress}.
+              {t('SinglePlant.info.address')}: {p.plantAddress}.
             </div>
             <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
               <PlugZap className="h-5 w-4" />
-              Connected to grid on: {format(p.gridConnectionDate, 'PP')}.
+              {t('SinglePlant.info.time')}:
+              {format(p.gridConnectionDate, 'PP', {
+                locale:
+                  params.locale === 'ar'
+                    ? arMA
+                    : params.locale === 'fr'
+                      ? fr
+                      : enUS,
+              })}
             </div>
-            <div className="flex items-center gap-x-1  text-sm text-gray-500 lg:text-base">
+            <div className="flex items-center gap-x-1 text-sm text-gray-500 lg:text-base">
               <Key className="h-5 w-4" />
-              Plant id: {params.plantCode.replace('%3D', '=')}
+              {t('SinglePlant.info.id')}: {params.plantCode.replace('%3D', '=')}
             </div>
           </div>
           <FinancialReport />
           <div className="flex w-full flex-col items-center gap-y-4">
             <p className="text-lg font-light uppercase text-gray-400 sm:text-base lg:text-xl">
-              powered by
+              {t('SinglePlant.poweredBy')}
             </p>
             <Image
               alt="e-one logo"
@@ -166,17 +202,33 @@ async function PlantDetails({ params, searchParams }: Params) {
               className="w-40 lg:w-60 xl:w-[280px]"
             />
           </div>
+          <div className="flex w-full items-center justify-center py-1">
+            <Button variant="default" size="lg">
+              {t('SinglePlant.download')}
+            </Button>
+          </div>
         </div>
 
         <div className="flex w-full flex-1 flex-col items-center justify-start gap-y-6  pt-12 lg:gap-y-12 lg:pt-0">
-          <ChooseMonth gridConnectionDate={p.gridConnectionDate} />
+          <ChooseMonth
+            gridConnectionDate={p.gridConnectionDate}
+            lang={params.locale}
+          />
           <h2 className="text-lg font-semibold  lg:text-2xl">
-            Report for: {format(new Date(year, month, 2), 'LLLL, u')}{' '}
+            {t('SinglePlant.report.title')}:{' '}
+            {format(new Date(year, month, 2), 'LLLL, u', {
+              locale:
+                params.locale === 'ar'
+                  ? arMA
+                  : params.locale === 'fr'
+                    ? fr
+                    : enUS,
+            })}
           </h2>
           {data.data.length === 0 ? (
             <div>
               <h2 className="text-center text-lg font-semibold">
-                There&apos;s no records for this month{' '}
+                {t('SinglePlant.report.empty')}
               </h2>
             </div>
           ) : (

@@ -16,6 +16,7 @@ import { Input } from './ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 const formSchema = z.object({
   rate: z.coerce
@@ -33,6 +34,7 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 function FinancialReport() {
+  const t = useTranslations();
   const [parent] = useAutoAnimate();
   const [open, setOpen] = useState(false);
 
@@ -71,11 +73,13 @@ function FinancialReport() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">include financial report</Button>
+        <Button variant="outline">
+          {t('SinglePlant.report.finance.button')}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Financial report</DialogTitle>
+          <DialogTitle>{t('SinglePlant.report.finance.title')}</DialogTitle>
         </DialogHeader>
         <form
           className="flex w-full flex-col items-stretch gap-y-4 px-8"
@@ -86,7 +90,7 @@ function FinancialReport() {
             ref={parent}
           >
             <div className="grid w-full grid-cols-2 items-center gap-x-1">
-              <Label>Electricity Price:</Label>
+              <Label>{t('SinglePlant.report.finance.price')}:</Label>
               <Input placeholder="Ex: 1.59" {...register('rate')} />
             </div>
             {errors.rate?.message && (
@@ -100,7 +104,7 @@ function FinancialReport() {
             ref={parent}
           >
             <div className="grid w-full grid-cols-2 items-center gap-x-1">
-              <Label>The cost of the plant :</Label>
+              <Label>{t('SinglePlant.report.finance.cost')}:</Label>
               <Input placeholder="Ex: 500000" {...register('cost')} />
             </div>
             {errors.cost?.message && (
@@ -110,7 +114,7 @@ function FinancialReport() {
             )}
           </div>
           <Button type="submit" disabled={!isValid}>
-            Submit
+            {t('SinglePlant.report.finance.submit')}
           </Button>
         </form>
       </DialogContent>

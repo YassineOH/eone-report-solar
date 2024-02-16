@@ -4,6 +4,7 @@ import * as React from 'react';
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 import { usePathname, useRouter } from '@/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +20,8 @@ export function ControlButtons() {
 
   const pathname = usePathname();
   const { replace } = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
 
   return (
     <div className="flex items-center gap-x-8">
@@ -51,13 +54,25 @@ export function ControlButtons() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => replace(pathname, { locale: 'ar' })}>
+          <DropdownMenuItem
+            onClick={() =>
+              replace(pathname + '?' + params.toString(), { locale: 'ar' })
+            }
+          >
             العربية
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => replace(pathname, { locale: 'en' })}>
+          <DropdownMenuItem
+            onClick={() =>
+              replace(pathname + '?' + params.toString(), { locale: 'en' })
+            }
+          >
             English
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => replace(pathname, { locale: 'fr' })}>
+          <DropdownMenuItem
+            onClick={() =>
+              replace(pathname + '?' + params.toString(), { locale: 'fr' })
+            }
+          >
             Français
           </DropdownMenuItem>
         </DropdownMenuContent>

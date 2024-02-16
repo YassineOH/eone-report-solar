@@ -7,10 +7,11 @@ import {
   SelectItem,
   SelectContent,
 } from './ui/select';
-import { MONTHS, allYears } from '@/lib/years-months';
+import { MONTHS, MONTHS_AR, MONTHS_FR, allYears } from '@/lib/years-months';
 
 interface Props {
   gridConnectionDate: string;
+  lang: 'ar' | 'fr' | 'en';
 }
 
 type SetDate =
@@ -20,7 +21,7 @@ type SetDate =
       value: string;
     };
 
-function ChooseMonth({ gridConnectionDate }: Props) {
+function ChooseMonth({ gridConnectionDate, lang }: Props) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -56,6 +57,8 @@ function ChooseMonth({ gridConnectionDate }: Props) {
     handleGettingData({ value: startingMonth.toString(), type: 'month' });
   }
 
+  const months = lang === 'ar' ? MONTHS_AR : lang === 'fr' ? MONTHS_FR : MONTHS;
+
   return (
     <div className="flex w-full items-center justify-evenly">
       <Select
@@ -81,7 +84,7 @@ function ChooseMonth({ gridConnectionDate }: Props) {
           <SelectValue placeholder="month" />
         </SelectTrigger>
         <SelectContent>
-          {MONTHS.map((m) => (
+          {months.map((m) => (
             <SelectItem
               key={m.value}
               value={m.value + ''}

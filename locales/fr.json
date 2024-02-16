@@ -65,5 +65,78 @@
             "id": "Identifiant de l'installation",
             "button": "Voir les détails"
         }
+    },
+    "SinglePlant": {
+        "error": {
+            "title": "Trop de demandes",
+            "text": "Veuillez patienter dix minutes et réessayer plus tard..."
+        },
+        "back": "Retourner",
+        "status": {
+            "title": "État actuel de l'installation",
+            "working": "NORMALE",
+            "offline": "HORS LIGNE",
+            "faulty": "DÉFECTUEUX"
+        },
+        "info": {
+            "capacity": "Capacité",
+            "address": "Adresse",
+            "time": "Connecté au réseau sur",
+            "id": "Identifiant de l'installation",
+            "button": "Voir les détails"
+        },
+        "poweredBy": "présente par",
+        "report": {
+            "title": "Rapport pour le",
+            "empty": "Il n'y a aucun enregistrement pour ce mois-ci",
+            "energy": {
+                "solarPowerConsumed": {
+                    "key": "Production solaire",
+                    "unit": "kWh"
+                },
+                "gridEnergy": {
+                    "key": "Énergie du réseau",
+                    "unit": "kWh"
+                },
+                "totalConsumption": {
+                    "key": "Consommation",
+                    "unit": "kWh"
+                },
+                "coverage": {
+                    "key": "Taux de couverture",
+                    "unit": "%"
+                },
+                "autoProductionPercentage": {
+                    "key": "Auto-consommation",
+                    "unit": "%"
+                },
+                "savedCO2": {
+                    "key": "Émissions de CO2 évitées",
+                    "unit": "To"
+                },
+                "totalSaving": {
+                    "key": "Économie totale",
+                    "unit": "MAD"
+                },
+                "roi": {
+                    "key": "Le reste estimé du ROI",
+                    "unit": "mois"
+                }
+            },
+            "finance": {
+                "button": "Inclure le rapport financier",
+                "title": "Rapport financier",
+                "price": "Prix de l'électricité",
+                "cost": "Le coût de l'installation",
+                "submit": "Soumettre"
+            }
+        },
+        "chart": {
+            "solar": "Solaire",
+            "grid": "Réseau",
+            "consumption": "Consommation",
+            "day": "jour"
+        },
+        "download": "Téléchargez Le Rapport"
     }
 }

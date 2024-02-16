@@ -65,5 +65,78 @@
             "id": "Plant id",
             "button": "See the details"
         }
+    },
+    "SinglePlant": {
+        "error": {
+            "title": "Too many requests",
+            "text": "Please wait ten minutes and try later..."
+        },
+        "back": "Go back",
+        "status": {
+            "title": "Current status of the plant",
+            "working": "NORMAL",
+            "offline": "OFFLINE",
+            "faulty": "FAULTY"
+        },
+        "info": {
+            "capacity": "Capacity",
+            "address": "Address",
+            "time": "Connected to grid on",
+            "id": "Plant id",
+            "button": "See the details"
+        },
+        "poweredBy": "powered by",
+        "report": {
+            "title": "Report for the",
+            "empty": "There&apos;s no records for this month",
+            "energy": {
+                "solarPowerConsumed": {
+                    "key": "Solar Production",
+                    "unit": "kWh"
+                },
+                "gridEnergy": {
+                    "key": "Grid energy",
+                    "unit": "kWh"
+                },
+                "totalConsumption": {
+                    "key": "Consumption",
+                    "unit": "kWh"
+                },
+                "coverage": {
+                    "key": "Coverage",
+                    "unit": "%"
+                },
+                "autoProductionPercentage": {
+                    "key": "Auto-consumption",
+                    "unit": "%"
+                },
+                "savedCO2": {
+                    "key": "CO2 emissions avoided",
+                    "unit": "To"
+                },
+                "totalSaving": {
+                    "key": "Total saving",
+                    "unit": "MAD"
+                },
+                "roi": {
+                    "key": "The remaining estimated of ROI",
+                    "unit": "month"
+                }
+            },
+            "finance": {
+                "button": "Include financial report",
+                "title": "Financial Report",
+                "price": "Electricity Price",
+                "cost": "The cost of the plant",
+                "submit": "Submit"
+            }
+        },
+        "chart": {
+            "solar": "Solar",
+            "grid": "Grid",
+            "consumption": "Consumption",
+            "day": "day"
+        },
+        "download": "Download The Report"
     }
 }
