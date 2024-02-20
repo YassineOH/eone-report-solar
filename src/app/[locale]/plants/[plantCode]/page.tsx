@@ -15,9 +15,14 @@ import { Link } from '@/navigation';
 import Summary from '@/components/Summary';
 import FinancialReport from '@/components/FinancialReport';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PDFRapport from '@/pdf/Rapport';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
+const DownloadButton = dynamic(() => import('@/components/DownloadButton'), {
+  ssr: false,
+});
 
 const plantSchema = z.object({
   plantName: string(),
@@ -46,7 +51,6 @@ async function PlantDetails({ params, searchParams }: Params) {
   const t = await getTranslations();
 
   const token = cookies().get('xsrf-token')?.value;
-
   if (!token) {
     redirect('/');
   }
@@ -203,9 +207,12 @@ async function PlantDetails({ params, searchParams }: Params) {
             />
           </div>
           <div className="flex w-full items-center justify-center py-1">
-            <Button variant="default" size="lg">
-              {t('SinglePlant.download')}
-            </Button>
+            <DownloadButton
+              dailyData={data.data}
+              plantInfo={result.data}
+              time={new Date(year, month, 2).getTime()}
+              text={t('SinglePlant.download')}
+            />
           </div>
         </div>
 
