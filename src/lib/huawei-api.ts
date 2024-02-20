@@ -4,6 +4,7 @@ import { DailyData } from '@/types/dailyData';
 import { ReLOGIN, ToManyRequest } from '@/types/login';
 import { Plants } from '@/types/plants';
 import { PlantData } from '@/types/plantData';
+import { absoluteURL } from './utils';
 
 export const loginToFusionSolar = async ({
   password,
@@ -12,7 +13,7 @@ export const loginToFusionSolar = async ({
   password: string;
   username: string;
 }) => {
-  return axios.post('http://localhost:3000/api/login', {
+  return axios.post(absoluteURL('/api/login'), {
     username,
     password,
   });
