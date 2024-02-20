@@ -21,6 +21,7 @@ import { format } from 'date-fns';
 import ReactPDFChart from 'react-pdf-charts';
 
 import { createTw } from 'react-pdf-tailwind';
+import { fr } from 'date-fns/locale';
 
 const tw = createTw({});
 
@@ -49,14 +50,16 @@ function PDFRapport({ dailyData, time, plantInfo }: Props) {
         </View>
 
         <View style={tw('flex flex-col gap-y-10')}>
-          <Header time={time} />
+          <Header time={time} lang="en" />
           <View>
             <View>
-              <Text style={tw('font-semibold text-lg')}>
-                1. Information about the plant:
+              <Text style={tw('font-semibold text-2xl')}>
+                1. Informations about the plant:
               </Text>
             </View>
-            <View style={tw('flex flex-row items-stretch justify-start')}>
+            <View
+              style={tw('flex text-base flex-row items-stretch justify-start')}
+            >
               <View style={tw('flex-1 flex flex-col gap-y-2')}>
                 <Info info="Plant Name" value={plantInfo.plantName} />
                 <Info info="capacity" value={`${plantInfo.capacity} kWp`} />
@@ -71,7 +74,7 @@ function PDFRapport({ dailyData, time, plantInfo }: Props) {
             </View>
           </View>
           <View>
-            <Text style={tw('font-semibold text-lg')}>2. Results:</Text>
+            <Text style={tw('font-semibold text-2xl')}>2. Results:</Text>
             <View style={tw('flex flex-row items-stretch justify-start')}>
               <View
                 style={tw(
@@ -111,6 +114,103 @@ function PDFRapport({ dailyData, time, plantInfo }: Props) {
                 />
                 <EnergyResult
                   text="saved co2"
+                  unit="To"
+                  value={data.savedCO2.toFixed(2)}
+                />
+              </View>
+            </View>
+          </View>
+          {/* <View>
+            <View style={tw('w-full flex flex-row gap-y-5')}>
+              <Saving amount={400} text="Monthly saving:" />
+              <Saving amount={40000000} text="Total saving:" />
+            </View>
+          </View> */}
+          <View style={tw('w-full')}>
+            {/* <ReactPDFChart>
+              <Chart dailyData={dailyData} />
+            </ReactPDFChart> */}
+          </View>
+        </View>
+      </Page>
+      <Page
+        size="A4"
+        style={tw('px-16 py-10 gap-y-16 flex w-full flex-col bg-[#e9eced] ')}
+      >
+        <View>
+          <View>
+            <LogoSVG />
+          </View>
+        </View>
+
+        <View style={tw('flex flex-col gap-y-10')}>
+          <Header time={time} lang="fr" />
+          <View>
+            <View>
+              <Text style={tw('font-semibold text-2xl')}>
+                1. Informations sur l&apos;installation:
+              </Text>
+            </View>
+            <View
+              style={tw('flex text-base flex-row items-stretch justify-start')}
+            >
+              <View style={tw('flex-1 flex flex-col gap-y-2')}>
+                <Info
+                  info="Nom de l'installation"
+                  value={plantInfo.plantName}
+                />
+                <Info info="Capacité" value={`${plantInfo.capacity} kWc`} />
+              </View>
+              <View style={tw('flex-1 flex flex-col gap-y-2')}>
+                <Info
+                  info="Connecté le"
+                  value={format(plantInfo.gridConnectionDate, 'PPP')}
+                />
+                <Info info="Adresse" value={plantInfo.plantAddress} />
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={tw('font-semibold text-2xl')}>2. Results:</Text>
+            <View style={tw('flex flex-row items-stretch justify-start')}>
+              <View
+                style={tw(
+                  'flex-1 flex flex-col items-start justify-start gap-y-2',
+                )}
+              >
+                <EnergyResult
+                  text="Consommation"
+                  unit="kWh"
+                  value={data.totalConsumption.toFixed(2)}
+                />
+                <EnergyResult
+                  text="Production solaire"
+                  unit="kWh"
+                  value={data.solarPowerConsumed.toFixed(2)}
+                />
+                <EnergyResult
+                  text="l'énergie du réseau"
+                  unit="kWh"
+                  value={data.gridEnergy.toFixed(2)}
+                />
+              </View>
+              <View
+                style={tw(
+                  'flex-1 flex flex-col items-start justify-start gap-y-2',
+                )}
+              >
+                <EnergyResult
+                  text="Taux de couverture"
+                  unit="%"
+                  value={data.coverage.toFixed(2)}
+                />
+                <EnergyResult
+                  text="Taux d'autoconsommation"
+                  unit="%"
+                  value={data.autoProductionPercentage.toFixed(2)}
+                />
+                <EnergyResult
+                  text="Co2 évitée"
                   unit="To"
                   value={data.savedCO2.toFixed(2)}
                 />
@@ -201,11 +301,21 @@ const LogoSVG = () => {
   );
 };
 
-const Header = ({ time }: { time: number }) => {
+const Header = ({ time, lang }: { time: number; lang: 'fr' | 'en' | 'ar' }) => {
   return (
     <View style={tw('text-center flex flex-col gap-y-0')}>
       <Text style={tw('text-4xl leading-normal font-bold')}>
-        Report for: {format(new Date(time).toUTCString(), 'LLLL, u')}
+        {lang === 'en'
+          ? `Report for: ${format(new Date(time).toUTCString(), 'LLLL, u')}`
+          : lang === 'fr'
+            ? `Rapport pour le: ${format(
+                new Date(time).toUTCString(),
+                'LLLL, u',
+                {
+                  locale: fr,
+                },
+              )}`
+            : ''}
       </Text>
     </View>
   );
