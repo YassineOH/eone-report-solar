@@ -4,7 +4,7 @@ import '../globals.css';
 import Providers from '@/components/Providers';
 import { cn } from '@/lib/utils';
 import { ControlButtons } from '@/components/ControlButtons';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { useMessages } from 'next-intl';
 
 const inter = Inter({ subsets: ['latin'] });
 const rubik = Rubik({ subsets: ['arabic'] });

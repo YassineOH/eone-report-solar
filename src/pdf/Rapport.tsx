@@ -1,9 +1,5 @@
 'use client';
 
-import { pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-
 import Chart from '@/components/Chart';
 import { getMonthData } from '@/lib/formatData';
 import { FusionSolarDailyData } from '@/types/dailyData';
@@ -15,6 +11,8 @@ import {
   Svg,
   Circle,
   Path,
+  Font,
+  StyleSheet,
 } from '@react-pdf/renderer';
 import { format } from 'date-fns';
 
@@ -23,8 +21,21 @@ import ReactPDFChart from 'react-pdf-charts';
 import { createTw } from 'react-pdf-tailwind';
 import { fr } from 'date-fns/locale';
 
+import font from './Inter-Regular.ttf';
+
 const tw = createTw({});
 
+const styles = StyleSheet.create({
+  page: {
+    paddingHorizontal: 64,
+    paddingVertical: 60,
+    rowGap: 64,
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    fontFamily: 'Inter',
+  },
+});
 interface Props {
   time: number;
   plantInfo: {
@@ -36,13 +47,16 @@ interface Props {
   dailyData: FusionSolarDailyData[];
 }
 function PDFRapport({ dailyData, time, plantInfo }: Props) {
+  Font.register({
+    family: 'Inter',
+    src: font,
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+  });
   const data = getMonthData(dailyData);
   return (
     <Document title="report" author="e-one" subject="report of solar plant">
-      <Page
-        size="A4"
-        style={tw('px-16 py-10 gap-y-16 flex w-full flex-col bg-[#e9eced] ')}
-      >
+      <Page size="A4" style={styles.page}>
         <View>
           <View>
             <LogoSVG />
