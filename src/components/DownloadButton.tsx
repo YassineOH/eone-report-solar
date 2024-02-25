@@ -19,12 +19,27 @@ interface Props {
   };
   time: number;
   text: string;
+  rate: string;
+  totalPower: number;
 }
-function DownloadButton({ dailyData, plantInfo, time, text }: Props) {
+function DownloadButton({
+  dailyData,
+  plantInfo,
+  time,
+  text,
+  totalPower,
+  rate,
+}: Props) {
   return (
     <PDFDownloadLink
       document={
-        <PDFRapport dailyData={dailyData} plantInfo={plantInfo} time={time} />
+        <PDFRapport
+          dailyData={dailyData}
+          plantInfo={plantInfo}
+          time={time}
+          rate={rate}
+          totalPower={totalPower}
+        />
       }
       fileName={plantInfo.plantName}
       className={buttonVariants({ size: 'lg' })}

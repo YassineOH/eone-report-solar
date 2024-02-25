@@ -1,7 +1,6 @@
+/* eslint-disable jsx-a11y/alt-text */
 'use client';
 
-import { getMonthData } from '@/lib/formatData';
-import { FusionSolarDailyData } from '@/types/dailyData';
 import {
   Document,
   Page,
@@ -12,13 +11,28 @@ import {
   Path,
   Font,
   StyleSheet,
+  Image,
 } from '@react-pdf/renderer';
 import { format } from 'date-fns';
-
 import { createTw } from 'react-pdf-tailwind';
-import { fr } from 'date-fns/locale';
+import { fr, arMA } from 'date-fns/locale';
 
+import { getMonthData } from '@/lib/formatData';
+import { FusionSolarDailyData } from '@/types/dailyData';
 import font from './Inter-Regular.ttf';
+
+interface Props {
+  time: number;
+  plantInfo: {
+    plantName: string;
+    capacity: number;
+    gridConnectionDate: string;
+    plantAddress: string;
+  };
+  dailyData: FusionSolarDailyData[];
+  rate: string;
+  totalPower: number;
+}
 
 const tw = createTw({});
 
@@ -33,17 +47,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
   },
 });
-interface Props {
-  time: number;
-  plantInfo: {
-    plantName: string;
-    capacity: number;
-    gridConnectionDate: string;
-    plantAddress: string;
-  };
-  dailyData: FusionSolarDailyData[];
-}
-function PDFRapport({ dailyData, time, plantInfo }: Props) {
+
+const formatterEn = new Intl.NumberFormat('us', {
+  style: 'decimal',
+  minimumFractionDigits: 2,
+});
+
+function PDFRapport({ dailyData, time, plantInfo, rate, totalPower }: Props) {
   Font.register({
     family: 'Inter',
     src: font,
@@ -59,8 +69,7 @@ function PDFRapport({ dailyData, time, plantInfo }: Props) {
             <LogoSVG />
           </View>
         </View>
-
-        <View style={tw('flex flex-col gap-y-10')}>
+        <View style={tw('flex flex-col gap-y-12')}>
           <Header time={time} lang="en" />
           <View>
             <View>
@@ -71,11 +80,11 @@ function PDFRapport({ dailyData, time, plantInfo }: Props) {
             <View
               style={tw('flex text-base flex-row items-stretch justify-start')}
             >
-              <View style={tw('flex-1 flex flex-col gap-y-2')}>
+              <View style={tw('flex-1 flex flex-col gap-y-1')}>
                 <Info info="Plant Name" value={plantInfo.plantName} />
                 <Info info="capacity" value={`${plantInfo.capacity} kWp`} />
               </View>
-              <View style={tw('flex-1 flex flex-col gap-y-2')}>
+              <View style={tw('flex-1 flex flex-col gap-y-1')}>
                 <Info
                   info="Connected on"
                   value={format(plantInfo.gridConnectionDate, 'PPP')}
@@ -131,113 +140,15 @@ function PDFRapport({ dailyData, time, plantInfo }: Props) {
               </View>
             </View>
           </View>
-          {/* <View>
+          <View>
+            <Text style={tw('font-semibold text-2xl')}>3. Savings:</Text>
             <View style={tw('w-full flex flex-row gap-y-5')}>
-              <Saving amount={400} text="Monthly saving:" />
-              <Saving amount={40000000} text="Total saving:" />
+              <Saving
+                amount={Number(rate) * data.solarPowerConsumed}
+                text="Monthly saving"
+              />
+              <Saving amount={Number(rate) * totalPower} text="Total saving" />
             </View>
-          </View> */}
-          <View style={tw('w-full')}>
-            {/* <ReactPDFChart>
-              <Chart dailyData={dailyData} />
-            </ReactPDFChart> */}
-          </View>
-        </View>
-      </Page>
-      <Page
-        size="A4"
-        style={tw('px-16 py-10 gap-y-16 flex w-full flex-col bg-[#e9eced] ')}
-      >
-        <View>
-          <View>
-            <LogoSVG />
-          </View>
-        </View>
-
-        <View style={tw('flex flex-col gap-y-10')}>
-          <Header time={time} lang="fr" />
-          <View>
-            <View>
-              <Text style={tw('font-semibold text-2xl')}>
-                1. Informations sur l&apos;installation:
-              </Text>
-            </View>
-            <View
-              style={tw('flex text-base flex-row items-stretch justify-start')}
-            >
-              <View style={tw('flex-1 flex flex-col gap-y-2')}>
-                <Info
-                  info="Nom de l'installation"
-                  value={plantInfo.plantName}
-                />
-                <Info info="Capacité" value={`${plantInfo.capacity} kWc`} />
-              </View>
-              <View style={tw('flex-1 flex flex-col gap-y-2')}>
-                <Info
-                  info="Connecté le"
-                  value={format(plantInfo.gridConnectionDate, 'PPP')}
-                />
-                <Info info="Adresse" value={plantInfo.plantAddress} />
-              </View>
-            </View>
-          </View>
-          <View>
-            <Text style={tw('font-semibold text-2xl')}>2. Results:</Text>
-            <View style={tw('flex flex-row items-stretch justify-start')}>
-              <View
-                style={tw(
-                  'flex-1 flex flex-col items-start justify-start gap-y-2',
-                )}
-              >
-                <EnergyResult
-                  text="Consommation"
-                  unit="kWh"
-                  value={data.totalConsumption.toFixed(2)}
-                />
-                <EnergyResult
-                  text="Production solaire"
-                  unit="kWh"
-                  value={data.solarPowerConsumed.toFixed(2)}
-                />
-                <EnergyResult
-                  text="l'énergie du réseau"
-                  unit="kWh"
-                  value={data.gridEnergy.toFixed(2)}
-                />
-              </View>
-              <View
-                style={tw(
-                  'flex-1 flex flex-col items-start justify-start gap-y-2',
-                )}
-              >
-                <EnergyResult
-                  text="Taux de couverture"
-                  unit="%"
-                  value={data.coverage.toFixed(2)}
-                />
-                <EnergyResult
-                  text="Taux d'autoconsommation"
-                  unit="%"
-                  value={data.autoProductionPercentage.toFixed(2)}
-                />
-                <EnergyResult
-                  text="Co2 évitée"
-                  unit="To"
-                  value={data.savedCO2.toFixed(2)}
-                />
-              </View>
-            </View>
-          </View>
-          {/* <View>
-            <View style={tw('w-full flex flex-row gap-y-5')}>
-              <Saving amount={400} text="Monthly saving:" />
-              <Saving amount={40000000} text="Total saving:" />
-            </View>
-          </View> */}
-          <View style={tw('w-full')}>
-            {/* <ReactPDFChart>
-              <Chart dailyData={dailyData} />
-            </ReactPDFChart> */}
           </View>
         </View>
       </Page>
@@ -258,13 +169,13 @@ const EnergyResult = ({
   return (
     <View
       style={tw(
-        'flex flex-col items-start h-auto justify-between border-l-4 border-[#52b4ab] pl-4',
+        'flex flex-col items-start h-auto gap-y-1 justify-between border-l-4 border-[#52b4ab] pl-4',
       )}
     >
       <Text style={tw('text-gray-400 text-sm')}>{text}</Text>
       <Text
         style={tw('text-black  text-xl leading-none font-semibold')}
-      >{`${value} ${unit}`}</Text>
+      >{`${formatterEn.format(Number(value))} ${unit}`}</Text>
     </View>
   );
 };
@@ -342,16 +253,13 @@ const Saving = ({ amount, text }: { amount: number; text: string }) => {
   return (
     <View
       style={tw(
-        'flex-1 flex flex-col items-start border-l-4 border-gray-400 pl-4 h-auto justify-between',
+        'flex-1 flex flex-col items-start gap-y-1 border-l-4 border-gray-400 pl-4 h-auto justify-between',
       )}
     >
-      <Text style={tw('text-gray-400 text-base')}>{text}</Text>
-      <Text
-        style={tw('text-[#52b4ab] font-bold text-xl leading-none')}
-      >{`${new Intl.NumberFormat('us-Fr', {
-        style: 'currency',
-        currency: 'MAD',
-      }).format(amount)}`}</Text>
+      <Text style={tw('text-gray-400 text-base')}>{text} :</Text>
+      <Text style={tw('text-[#52b4ab] font-bold text-xl leading-none')}>
+        {`${formatterEn.format(amount)} MAD`}
+      </Text>
     </View>
   );
 };

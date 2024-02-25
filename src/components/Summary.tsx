@@ -16,12 +16,10 @@ import Result from './Result';
 interface Props {
   dailyData: FusionSolarDailyData[];
   totalPower: number;
-  numberOfMonth: number;
   rate?: string;
-  cost?: string;
 }
 
-function Summary({ dailyData, totalPower, cost, rate, numberOfMonth }: Props) {
+function Summary({ dailyData, totalPower, rate }: Props) {
   const data = getMonthData(dailyData);
 
   const results = [
@@ -65,8 +63,7 @@ function Summary({ dailyData, totalPower, cost, rate, numberOfMonth }: Props) {
   ];
 
   const financialResults = [];
-  const monthlyPower = totalPower / numberOfMonth;
-  if (cost !== undefined && rate !== undefined) {
+  if (rate !== undefined) {
     financialResults.push(
       {
         title: 'totalSaving',
@@ -75,11 +72,9 @@ function Summary({ dailyData, totalPower, cost, rate, numberOfMonth }: Props) {
         Icon: Coins,
       },
       {
-        title: 'roi',
-        unit: 'Month',
-        value:
-          (Number(cost) - Number(rate) * totalPower) /
-          (monthlyPower * Number(rate)),
+        title: 'monthlySaving',
+        unit: 'MAD',
+        value: data.solarPowerConsumed * Number(rate),
         Icon: CalendarCheck,
       },
     );

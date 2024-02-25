@@ -118,9 +118,9 @@
                     "key": "Total saving",
                     "unit": "MAD"
                 },
-                "roi": {
-                    "key": "The remaining estimated of ROI",
-                    "unit": "month"
+                "monthlySaving": {
+                    "key": "Monthly saving",
+                    "unit": "MAD"
                 }
             },
             "finance": {

@@ -6,18 +6,16 @@ import { format } from 'date-fns';
 import { number, string, z } from 'zod';
 import { getTranslations } from 'next-intl/server';
 import { enUS, fr, arMA } from 'date-fns/locale';
-
+import type { Metadata, ResolvingMetadata } from 'next';
 import { redirect } from 'next/navigation';
+
 import { getDailyData2, getPlantData } from '@/lib/huawei-api';
 import ChooseMonth from '@/components/ChooseMonth';
-
 import { Link } from '@/navigation';
 import Summary from '@/components/Summary';
 import FinancialReport from '@/components/FinancialReport';
 import { Badge } from '@/components/ui/badge';
-import { buttonVariants } from '@/components/ui/button';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import PDFRapport from '@/pdf/Rapport';
+import { Button, buttonVariants } from '@/components/ui/button';
 
 const Chart = dynamic(() => import('@/components/Chart'), { ssr: false });
 const DownloadButton = dynamic(() => import('@/components/DownloadButton'), {
@@ -40,12 +38,28 @@ interface Params {
     m?: string;
     y?: string;
     plantInfo: string;
-    cost?: string;
     rate?: string;
   };
 }
 
 export const revalidate = 3600 * 8;
+
+export async function generateMetadata(
+  { searchParams }: Params,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const plantInfo = JSON.parse(searchParams.plantInfo);
+  const result = plantSchema.safeParse(plantInfo);
+
+  if (result.success === false) {
+    return {
+      title: 'eone',
+    };
+  }
+  return {
+    title: 'e-one | ' + result.data.plantName,
+  };
+}
 
 async function PlantDetails({ params, searchParams }: Params) {
   const t = await getTranslations();
@@ -70,7 +84,6 @@ async function PlantDetails({ params, searchParams }: Params) {
     ? Number(searchParams.m)
     : new Date().getUTCMonth();
 
-  const cost = searchParams.cost;
   const rate = searchParams.rate;
 
   const plantData = await getPlantData({
@@ -129,10 +142,7 @@ async function PlantDetails({ params, searchParams }: Params) {
         ? 1
         : 2;
   const totalPower = plantData.data[0].dataItemMap.total_power;
-  const numberOfMonth =
-    (new Date().getTime() -
-      new Date(result.data.gridConnectionDate).getTime()) /
-    (1000 * 60 * 60 * 24 * 30);
+
   return (
     <div className="w-full max-w-[1440px] space-y-12">
       <div className="flex flex-col items-center justify-between gap-x-8 gap-y-12 divide-y px-12 lg:flex-row lg:items-start lg:gap-y-0 lg:divide-y-0">
@@ -207,12 +217,20 @@ async function PlantDetails({ params, searchParams }: Params) {
             />
           </div>
           <div className="flex w-full items-center justify-center py-1">
-            <DownloadButton
-              dailyData={data.data}
-              plantInfo={result.data}
-              time={new Date(year, month, 2).getTime()}
-              text={t('SinglePlant.download')}
-            />
+            {rate === undefined ? (
+              <Button disabled size="lg">
+                {t('SinglePlant.download')}
+              </Button>
+            ) : (
+              <DownloadButton
+                dailyData={data.data}
+                plantInfo={result.data}
+                time={new Date(year, month, 2).getTime()}
+                text={t('SinglePlant.download')}
+                rate={rate}
+                totalPower={totalPower}
+              />
+            )}
           </div>
         </div>
 
@@ -242,10 +260,8 @@ async function PlantDetails({ params, searchParams }: Params) {
             <>
               <Summary
                 dailyData={data.data}
-                cost={cost}
                 rate={rate}
                 totalPower={totalPower}
-                numberOfMonth={numberOfMonth}
               />
               <Chart dailyData={data.data} />
             </>

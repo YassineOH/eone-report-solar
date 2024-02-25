@@ -24,11 +24,6 @@ const formSchema = z.object({
       invalid_type_error: 'the price should be a valid number',
     })
     .min(0.001, { message: 'the price should at least more than 0.01' }),
-  cost: z.coerce
-    .number({
-      invalid_type_error: 'the cost should be a valid number',
-    })
-    .min(14500, { message: 'the cost should at least more than 15000' }),
 });
 
 type FormType = z.infer<typeof formSchema>;
@@ -49,12 +44,11 @@ function FinancialReport() {
   } = useForm<FormType>({
     resolver: zodResolver(formSchema),
     mode: 'onBlur',
-    defaultValues: { cost: 0, rate: 0 },
+    defaultValues: { rate: 0 },
   });
-  const calculateRoi = ({ cost, rate }: FormType) => {
+  const calculateRoi = ({ rate }: FormType) => {
     const params = new URLSearchParams(searchParams);
 
-    params.set('cost', cost + '');
     params.set('rate', rate + '');
 
     replace(`${pathname}?${params.toString()}`);
@@ -99,20 +93,7 @@ function FinancialReport() {
               </span>
             )}
           </div>
-          <div
-            className="flex w-full flex-col items-stretch gap-y-1"
-            ref={parent}
-          >
-            <div className="grid w-full grid-cols-2 items-center gap-x-1">
-              <Label>{t('SinglePlant.report.finance.cost')}:</Label>
-              <Input placeholder="Ex: 500000" {...register('cost')} />
-            </div>
-            {errors.cost?.message && (
-              <span className="text-sm italic text-red-500">
-                {errors.cost.message}
-              </span>
-            )}
-          </div>
+
           <Button type="submit" disabled={!isValid}>
             {t('SinglePlant.report.finance.submit')}
           </Button>

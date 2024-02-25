@@ -18,8 +18,7 @@ function Result({ value, unit, title, Icon }: Props) {
         className={cn(
           'flex h-full scale-100 flex-col items-stretch justify-between gap-y-0',
           {
-            'gap-y-2 text-primary md:scale-110 md:items-center':
-              unit === 'MAD' || unit === 'Month',
+            'gap-y-2 text-primary md:scale-110 md:items-center': unit === 'MAD',
           },
         )}
       >

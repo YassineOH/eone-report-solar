@@ -8,6 +8,8 @@ import {
 } from '@/components/ui/card';
 import { getTranslations } from 'next-intl/server';
 
+import type { Metadata } from 'next';
+
 import { getPlants } from '@/lib/huawei-api';
 import { cookies } from 'next/headers';
 import { Link } from '@/navigation';
@@ -15,6 +17,13 @@ import { redirect } from 'next/navigation';
 import { Key, MapPin, PlugZap, Zap } from 'lucide-react';
 import { format } from 'date-fns';
 import { enUS, fr, arMA } from 'date-fns/locale';
+
+export const metadata: Metadata = {
+  title: 'E-one | Plants',
+  description:
+    'generate and download the report of your solar plant using our next.js app',
+  keywords: ['eone', 'solar', 'huawei', 'yassine ofqir-hamma'],
+};
 
 async function Plants({
   params: { locale },

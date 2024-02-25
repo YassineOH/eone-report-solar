@@ -118,9 +118,9 @@
                     "key": "Économie totale",
                     "unit": "MAD"
                 },
-                "roi": {
-                    "key": "Le reste estimé du ROI",
-                    "unit": "mois"
+                "monthlySaving": {
+                    "key": "Économie mensuelle",
+                    "unit": "MAD"
                 }
             },
             "finance": {
