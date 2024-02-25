@@ -1,6 +1,5 @@
 'use client';
 
-import Chart from '@/components/Chart';
 import { getMonthData } from '@/lib/formatData';
 import { FusionSolarDailyData } from '@/types/dailyData';
 import {
@@ -15,8 +14,6 @@ import {
   StyleSheet,
 } from '@react-pdf/renderer';
 import { format } from 'date-fns';
-
-import ReactPDFChart from 'react-pdf-charts';
 
 import { createTw } from 'react-pdf-tailwind';
 import { fr } from 'date-fns/locale';
