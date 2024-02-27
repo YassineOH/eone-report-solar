@@ -54,7 +54,7 @@ function Instructions() {
       </ol>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="block lg:hidden">See how</Button>
+          <Button className="block lg:hidden">{t('instruction.howBtn')}</Button>
         </DialogTrigger>
         <DialogContent className="mx-auto w-11/12 rounded-md">
           <ol className="flex w-auto list-decimal flex-col items-start justify-start gap-y-4 px-4">

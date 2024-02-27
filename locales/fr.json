@@ -3,6 +3,7 @@
         "title": "Téléchargez le rapport de vos centrales solaires",
         "poweredBy": "présente par",
         "instruction": {
+            "howBtn": "Voir Comment",
             "question": "Comment obtenir mes identifiants ?",
             "1": "Rendez-vous sur le site Web <fusion>FusionSolar</fusion> et connectez-vous.",
             "2": "Accédez à <bold>Plus > Système > Gestion de l'entreprise > Gestion Northbound. </bold>",

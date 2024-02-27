@@ -12,7 +12,7 @@ interface Props {
 function Result({ value, unit, title, Icon }: Props) {
   const t = useTranslations();
   return (
-    <div className="flex w-full items-center justify-start gap-x-6 shadow-sm lg:gap-x-4 lg:shadow-none">
+    <div className="flex w-auto items-center justify-start gap-x-6 shadow-sm lg:gap-x-4 lg:shadow-none">
       <Icon className="h-8 w-8 text-primary" />
       <div
         className={cn(

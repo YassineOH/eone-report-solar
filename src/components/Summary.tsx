@@ -87,7 +87,7 @@ function Summary({ dailyData, totalPower, rate }: Props) {
           <Result {...r} key={r.title} />
         ))}
       </div>
-      <div className="flex w-full flex-col items-center justify-between gap-y-2 px-0 lg:flex-row lg:px-6">
+      <div className="flex w-full flex-col  items-center justify-between gap-x-10 gap-y-2 px-0 lg:flex-row lg:justify-center lg:px-6">
         {financialResults.length > 1 &&
           financialResults.map((r) => <Result {...r} key={r.title} />)}
       </div>

@@ -3,6 +3,7 @@
         "title": "قم بتنزيل تقرير محطات الطاقة الشمسية الخاصة بك",
         "poweredBy": "مقدمة من طرف",
         "instruction": {
+            "howBtn": "انظر كيف",
             "question": "كيف يمكنني الحصول على بيانات الاعتماد الخاصة بي؟",
             "1": "انتقل إلى موقع <fusion>FusionSolar</fusion> وقم بتسجيل الدخول و إختيار اللغة الإنجليزية.",
             "2": "اِذهب إلى <bold>More > System > Company Management > Northbound Management. </bold>",

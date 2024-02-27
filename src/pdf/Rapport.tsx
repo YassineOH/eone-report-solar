@@ -11,7 +11,6 @@ import {
   Path,
   Font,
   StyleSheet,
-  Image,
 } from '@react-pdf/renderer';
 import { format } from 'date-fns';
 import { createTw } from 'react-pdf-tailwind';
@@ -20,6 +19,7 @@ import { fr, arMA } from 'date-fns/locale';
 import { getMonthData } from '@/lib/formatData';
 import { FusionSolarDailyData } from '@/types/dailyData';
 import font from './Inter-Regular.ttf';
+import fontAr from './Rubik-VariableFont_wght.ttf';
 
 interface Props {
   time: number;
@@ -46,17 +46,32 @@ const styles = StyleSheet.create({
     width: '100%',
     fontFamily: 'Inter',
   },
+  page2: {
+    paddingHorizontal: 64,
+    paddingVertical: 60,
+    rowGap: 64,
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    fontFamily: 'Rubik',
+    textAlign: 'right',
+  },
 });
 
 const formatterEn = new Intl.NumberFormat('us', {
   style: 'decimal',
   minimumFractionDigits: 2,
 });
-
 function PDFRapport({ dailyData, time, plantInfo, rate, totalPower }: Props) {
   Font.register({
     family: 'Inter',
     src: font,
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+  });
+  Font.register({
+    family: 'Rubik',
+    src: fontAr,
     fontWeight: 'normal',
     fontStyle: 'normal',
   });
@@ -152,6 +167,207 @@ function PDFRapport({ dailyData, time, plantInfo, rate, totalPower }: Props) {
           </View>
         </View>
       </Page>
+      <Page size="A4" style={styles.page}>
+        <View>
+          <View>
+            <LogoSVG />
+          </View>
+        </View>
+        <View style={tw('flex flex-col gap-y-12')}>
+          <Header time={time} lang="fr" />
+          <View>
+            <View>
+              <Text style={tw('font-semibold text-2xl')}>
+                1. Informations sur l&apos;installation :
+              </Text>
+            </View>
+            <View
+              style={tw('flex text-base flex-row items-stretch justify-start')}
+            >
+              <View style={tw('flex-1 flex flex-col gap-y-1')}>
+                <Info info="Nom d'installation" value={plantInfo.plantName} />
+                <Info info="Capacité" value={`${plantInfo.capacity} kWc`} />
+              </View>
+              <View style={tw('flex-1 flex flex-col gap-y-1')}>
+                <Info
+                  info="Connecté le"
+                  value={format(plantInfo.gridConnectionDate, 'PPP', {
+                    locale: fr,
+                  })}
+                />
+                <Info info="Adresse" value={plantInfo.plantAddress} />
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={tw('font-semibold text-2xl')}>2. Résultats:</Text>
+            <View style={tw('flex flex-row items-stretch justify-start')}>
+              <View
+                style={tw(
+                  'flex-1 flex flex-col items-start justify-start gap-y-2',
+                )}
+              >
+                <EnergyResult
+                  text="Consommation"
+                  unit="kWh"
+                  value={data.totalConsumption.toFixed(2)}
+                />
+                <EnergyResult
+                  text="Production Solaire"
+                  unit="kWh"
+                  value={data.solarPowerConsumed.toFixed(2)}
+                />
+                <EnergyResult
+                  text="L'énergie du réseau"
+                  unit="kWh"
+                  value={data.gridEnergy.toFixed(2)}
+                />
+              </View>
+              <View
+                style={tw(
+                  'flex-1 flex flex-col items-start justify-start gap-y-2',
+                )}
+              >
+                <EnergyResult
+                  text="Taux de couverture"
+                  unit="%"
+                  value={data.coverage.toFixed(2)}
+                />
+                <EnergyResult
+                  text="L'autoproduction"
+                  unit="%"
+                  value={data.autoProductionPercentage.toFixed(2)}
+                />
+                <EnergyResult
+                  text="Les emissions de CO2 évitées"
+                  unit="To"
+                  value={data.savedCO2.toFixed(2)}
+                />
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={tw('font-semibold text-2xl')}>3. Savings:</Text>
+            <View style={tw('w-full flex flex-row gap-y-5')}>
+              <Saving
+                amount={Number(rate) * data.solarPowerConsumed}
+                text="Épargne mensuelle"
+              />
+              <Saving
+                amount={Number(rate) * totalPower}
+                text="Épargne totale"
+              />
+            </View>
+          </View>
+        </View>
+      </Page>
+      <Page size="A4" style={styles.page2}>
+        <View>
+          <View>
+            <LogoSVG />
+          </View>
+        </View>
+        <View style={tw('flex flex-col gap-y-12')}>
+          <Header time={time} lang="ar" />
+          <View>
+            <View>
+              <Text style={tw('font-semibold text-2xl text-right')}>
+                معلومات حول المحطة الشمسية
+              </Text>
+            </View>
+            <View
+              style={tw('flex text-base flex-row items-stretch justify-start')}
+            >
+              <View style={tw('flex-1 flex flex-col gap-y-1')}>
+                <Info info="اسم المحطة" value={plantInfo.plantName} isAr />
+                <Info
+                  info="السعة"
+                  value={`  ك واط ${plantInfo.capacity}`}
+                  isAr
+                />
+              </View>
+              <View style={tw('flex-1 flex flex-col gap-y-1')}>
+                <Info
+                  info="بدء الاتصال منذ"
+                  isAr
+                  value={format(plantInfo.gridConnectionDate, 'PPP', {
+                    locale: arMA,
+                  })}
+                />
+                <Info info="العنوان" value={plantInfo.plantAddress} isAr />
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={tw('font-semibold text-2xl  text-end')}>النتائج</Text>
+            <View style={tw('flex flex-row items-stretch justify-start')}>
+              <View
+                style={tw(
+                  'flex-1 flex flex-col items-start justify-start gap-y-2',
+                )}
+              >
+                <EnergyResult
+                  text="الاستهلاك"
+                  unit="kWh"
+                  value={data.totalConsumption.toFixed(2)}
+                  isAr
+                />
+                <EnergyResult
+                  text="إنتاج الطاقة الشمسية"
+                  unit="kWh"
+                  value={data.solarPowerConsumed.toFixed(2)}
+                  isAr
+                />
+                <EnergyResult
+                  text="طاقة الشبكة"
+                  unit="kWh"
+                  value={data.gridEnergy.toFixed(2)}
+                  isAr
+                />
+              </View>
+              <View
+                style={tw(
+                  'flex-1 flex flex-col items-start justify-start gap-y-2',
+                )}
+              >
+                <EnergyResult
+                  text="نسبة التغطية"
+                  unit="%"
+                  value={data.coverage.toFixed(2)}
+                  isAr
+                />
+                <EnergyResult
+                  text="الإنتاج الذاتي"
+                  unit="%"
+                  value={data.autoProductionPercentage.toFixed(2)}
+                  isAr
+                />
+                <EnergyResult
+                  text="انبعاثات ثاني أكسيد الكربون"
+                  unit="To"
+                  value={data.savedCO2.toFixed(2)}
+                  isAr
+                />
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={tw('font-semibold text-2xl text-right')}>الإدخار</Text>
+            <View style={tw('w-full flex flex-row gap-y-5')}>
+              <Saving
+                amount={Number(rate) * data.solarPowerConsumed}
+                text="الادخار الشهري"
+                isAr
+              />
+              <Saving
+                amount={Number(rate) * totalPower}
+                text="الادخار الإجمالي"
+                isAr
+              />
+            </View>
+          </View>
+        </View>
+      </Page>
     </Document>
   );
 }
@@ -160,22 +376,26 @@ const EnergyResult = ({
   text,
   value,
   unit,
+  isAr = false,
 }: {
   text: string;
   value: string;
   unit: string;
+  isAr?: boolean;
 }) => {
   const tw = createTw({});
   return (
     <View
       style={tw(
-        'flex flex-col items-start h-auto gap-y-1 justify-between border-l-4 border-[#52b4ab] pl-4',
+        `flex flex-col w-full ${isAr ? 'items-end border-r-4 text-right pr-4' : 'items-start border-l-4 text-left pl-4'} h-auto gap-y-1 justify-between border-[#52b4ab]`,
       )}
     >
       <Text style={tw('text-gray-400 text-sm')}>{text}</Text>
-      <Text
-        style={tw('text-black  text-xl leading-none font-semibold')}
-      >{`${formatterEn.format(Number(value))} ${unit}`}</Text>
+      <Text style={tw('text-black  text-xl leading-none font-semibold ')}>
+        {isAr
+          ? `${unit} ${formatterEn.format(Number(value))}`
+          : `${formatterEn.format(Number(value))} ${unit}`}
+      </Text>
     </View>
   );
 };
@@ -237,28 +457,53 @@ const Header = ({ time, lang }: { time: number; lang: 'fr' | 'en' | 'ar' }) => {
                   locale: fr,
                 },
               )}`
-            : ''}
+            : ` تقرير ل: ${format(new Date(time).toUTCString(), 'LLLL, u', {
+                locale: arMA,
+              })}`}
       </Text>
     </View>
   );
 };
 
-const Info = ({ info, value }: { info: string; value: string }) => {
-  return (
-    <Text style={tw('text-gray-400 w-full')}>{`• ${info}: ${value}`}</Text>
-  );
-};
-
-const Saving = ({ amount, text }: { amount: number; text: string }) => {
+const Info = ({
+  info,
+  value,
+  isAr = false,
+}: {
+  info: string;
+  value: string;
+  isAr?: boolean;
+}) => {
   return (
     <View
       style={tw(
-        'flex-1 flex flex-col items-start gap-y-1 border-l-4 border-gray-400 pl-4 h-auto justify-between',
+        `text-gray-400 w-full flex ${isAr ? 'text-left items-end' : 'text-left items-start'}`,
+      )}
+    >
+      <Text style={tw('text-sm text-end')}>{info} :</Text>
+      <Text style={tw('text-black')}>{value}</Text>
+    </View>
+  );
+};
+
+const Saving = ({
+  amount,
+  text,
+  isAr = false,
+}: {
+  amount: number;
+  text: string;
+  isAr?: boolean;
+}) => {
+  return (
+    <View
+      style={tw(
+        `flex-1 flex flex-col  ${isAr ? 'items-end border-r-4 text-right pr-4' : 'items-start border-l-4 text-left pl-4'} gap-y-1  border-gray-400  h-auto justify-between`,
       )}
     >
       <Text style={tw('text-gray-400 text-base')}>{text} :</Text>
       <Text style={tw('text-[#52b4ab] font-bold text-xl leading-none')}>
-        {`${formatterEn.format(amount)} MAD`}
+        {`${formatterEn.format(amount)} ${isAr ? 'درهم' : 'MAD'}`}
       </Text>
     </View>
   );

@@ -3,6 +3,7 @@
         "title": "Download the report of your solar plants",
         "poweredBy": "powered by",
         "instruction": {
+            "howBtn": "See How",
             "question": "How I get my credentials ?",
             "1": "Head to <fusion>FusionSolar</fusion> website and login.",
             "2": "Go <bold>More > System > Company Management > Northbound Management. </bold>",
