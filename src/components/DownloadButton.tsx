@@ -9,6 +9,8 @@ import { FusionSolarDailyData } from '@/types/dailyData';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { buttonVariants } from './ui/button';
 
+import { format } from 'date-fns';
+
 interface Props {
   dailyData: FusionSolarDailyData[];
   plantInfo: {
@@ -41,7 +43,11 @@ function DownloadButton({
           totalPower={totalPower}
         />
       }
-      fileName={plantInfo.plantName}
+      fileName={
+        plantInfo.plantName +
+        ' ' +
+        format(new Date(time).toUTCString(), 'LLLL, u')
+      }
       className={buttonVariants({ size: 'lg' })}
     >
       {({ loading }) => {
